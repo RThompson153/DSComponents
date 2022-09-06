@@ -1,0 +1,77 @@
+﻿@using System.Timers
+@using DSComponents.Input.Enums
+@using DSComponents.Input.Models
+
+
+@switch(Options.Label.Position)
+{
+	case LabelPosition.Top:
+	case LabelPosition.TopLeft:
+	case LabelPosition.TopRight:
+	case LabelPosition.InlineTop:
+	case LabelPosition.InlineTopLeft:
+	case LabelPosition.InlineTopRight:
+		<LabelComponent Options="@Options" />
+		break;
+}
+
+<input type="text" class="col-12 rounded @Options.TextColor @Options.BackgroundColor @Options.TextColor @((Options.Error) ? "error" : "")" value="@_value" name="@Options.Name" maxlength="@Options.MaxLength" @oninput="onInput" @onfocus="onFocus" @onblur="onBlur" />
+
+@switch(Options.Label.Position)
+{
+	case LabelPosition.Bottom:
+	case LabelPosition.BottomLeft:
+	case LabelPosition.BottomRight:
+	case LabelPosition.InlineBottom:
+	case LabelPosition.InlineBottomLeft:
+	case LabelPosition.InlineBottomRight:
+		<LabelComponent Options="@Options" />
+		break;
+}
+
+@code {
+	[Parameter]
+	public DSCInputConfig Options { get; set; }
+	[Parameter]
+	public EventCallback<string> Callback { get; set; }
+
+	private string _value;
+	private Timer? _timer;
+
+	protected override void OnParametersSet()
+	{
+		_value = Options.Value.ToString();
+
+		if(Options.Timeout is not null)
+		{
+			_timer = new Timer();
+			_timer.Interval = Options.Timeout.GetValueOrDefault();
+			_timer.Elapsed += (x, y) => Callback.InvokeAsync(_value);
+			_timer.AutoReset = false;
+		}
+
+		base.OnParametersSet();
+	}
+
+	private void onInput(ChangeEventArgs val)
+	{
+		_value = val.Value.ToString();
+
+		setError();
+
+		if(!Options.Error && _timer is not null)
+		{
+			_timer.Stop();
+			_timer.Start();
+		}
+
+		Callback.InvokeAsync(_value);
+	}
+
+	private void onFocus() => setError();
+
+	private void onBlur() => Options.Error = false;
+
+	private void setError() => Options.Error = (!string.IsNullOrEmpty(_value) && (Options.MinLength is not null && _value.Length < Options.MinLength) 
+		|| (Options.MaxLength is not null && _value.Length > Options.MaxLength));
+}

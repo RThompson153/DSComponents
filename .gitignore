@@ -348,3 +348,5 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+/DSComponents/ExampleJsInterop.cs
+/DSComponents/wwwroot/exampleJsInterop.js
