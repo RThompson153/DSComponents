@@ -1,12 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DSComponents.Input.Models;
 
 namespace DSComponents
 {
-	public static class DSCService
+	public class DSCService : IDSCService
 	{
+		private IEnumerable<DSCInputConfig> _dscInputConfigs;
+		public IEnumerable<DSCInputConfig> DSCInputConfigs 
+		{ 
+			get => _dscInputConfigs ?? new List<DSCInputConfig>();
+			set => _dscInputConfigs = value; 
+		}
+
+		public void CloseDropdowns()
+		{
+			if(DSCInputConfigs.Any(dsci => dsci.Expanded))
+			{
+				foreach(var dsci in DSCInputConfigs)
+					dsci.Expanded = false;
+			}
+		}
 	}
 }

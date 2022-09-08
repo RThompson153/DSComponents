@@ -21,6 +21,8 @@ namespace DSComponents.Input.Models
 		public string TextColor { get; set; }
 		public string BackgroundColor { get; set; } = "bg-white";
 		public bool Error { get; set; }
+
+		public bool Expanded {get;set;}
 		public Dictionary<object, object> Items { get; set; }
 	}
 }

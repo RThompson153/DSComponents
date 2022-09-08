@@ -1,5 +1,100 @@
-﻿<h3>DSCDropdown</h3>
+﻿@using System.Linq
+@using DSComponents.Input.Enums
+@using DSComponents.Input.Models
 
+@switch(Options.Label.Position)
+{
+	case LabelPosition.Top:
+	case LabelPosition.TopLeft:
+	case LabelPosition.TopRight:
+	case LabelPosition.InlineTop:
+	case LabelPosition.InlineTopLeft:
+	case LabelPosition.InlineTopRight:
+		<DSCLabel Options="@Options" />
+		break;
+}
+
+<div class="col-12">
+	<div class="d-flex rounded dropdown @Options.TextColor @Options.BackgroundColor @Options.TextColor @((Options.Error) ? "error" : "")" data-for="@($"dropdown-list-{_ref}")">
+		<div class="col-10">
+			@if(_value?.Any() == true)
+			{
+				@foreach(KeyValuePair<object, string> item in _value)
+				{
+					<span>@item.Value</span>
+				}
+			}
+		</div>
+		<i class="my-auto ml-auto caret caret-down"></i>
+	</div>
+
+	<div class="dropdown-list" id="@($"dropdown-list-{_ref}")">
+		@if(Options.Searchable)
+		{
+			<DSCText Options="@Options" Callback="search" />
+		}
+
+		<ul class="p-0">
+			@foreach(KeyValuePair<object, object> item in _filteredItems)
+			{
+				<li class="px-1 @((_value?.ContainsKey(item.Key) == true) ? "selected" : "")" @onclick="@(() => onChange(item))">@item.Value</li>
+			}
+		</ul>
+	</div>
+</div>
+
+@switch(Options.Label.Position)
+{
+	case LabelPosition.Bottom:
+	case LabelPosition.BottomLeft:
+	case LabelPosition.BottomRight:
+	case LabelPosition.InlineBottom:
+	case LabelPosition.InlineBottomLeft:
+	case LabelPosition.InlineBottomRight:
+		<DSCLabel Options="@Options" />
+		break;
+}
 @code {
+	[CascadingParameter]
+	protected IDSCService DSCService { get; set; }
+	[Parameter]
+	public DSCInputConfig Options { get; set; }
+	[Parameter]
+	public EventCallback<string> Callback { get; set; }
 
+	private DSCInputConfig _config;
+	private Dictionary<object, object> _filteredItems;
+	private Dictionary<object, string> _value;
+	private Guid _ref;
+
+	protected override void OnParametersSet()
+	{
+		_value = new ();
+
+		_config = Options;
+
+		if (!DSCService.DSCInputConfigs.Contains(_config))
+			DSCService.DSCInputConfigs.ToList().Add(_config);
+
+		_filteredItems = Options.Items;
+
+		_ref = Guid.NewGuid();
+
+		base.OnParametersSet();
+	}
+
+	private void search(string val) => _filteredItems = Options.Items.Where(i => i.Value.ToString().ToLower().Contains(val.ToLower())).ToDictionary(x => x.Key, y => y.Value);
+
+	private void onChange(KeyValuePair<object, object> item)
+	{
+		if(!Options.Multiple)
+		{
+			_value = new();
+		}
+
+		if (!_value.ContainsKey(item.Key))
+			_value.Add(item.Key, item.Value.ToString());
+		else
+			_value.Remove(item.Key);
+	}
 }

@@ -1,0 +1,33 @@
+﻿.label-inline {
+	position: absolute;
+	z-index: 1;
+}
+
+	.label-inline.top {
+		top: 0rem;
+	}
+
+	.label-inline.bottom {
+		bottom: -0.5rem;
+	}
+
+	.label-inline.left {
+		left: 1rem;
+	}
+
+	.label-inline.right {
+		right: 1rem;
+	}
+
+	.label-inline label {
+		height: 0.11rem;
+	}
+
+	.label-inline.top label span, .label-inline.bottom label span {
+		transform: translateY(-0.7rem);
+	}
+
+.error {
+	color: rgb(155, 0, 0);
+	font-weight: bold;
+}
