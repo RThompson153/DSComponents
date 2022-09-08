@@ -8,6 +8,7 @@ namespace DSComponents.Input.Models
 {
 	public class DSCInputConfig
 	{
+		public Guid Id {get;set;}
 		public DSCLabelConfig Label { get; set; }
 		//public InputTypes Type { get; set; }
 		public string Name {get;set;}

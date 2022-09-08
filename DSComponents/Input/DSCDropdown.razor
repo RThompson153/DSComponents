@@ -3,7 +3,7 @@
 @using DSComponents.Input.Enums
 @using DSComponents.Input.Models
 
-@switch(Options.Label.Position)
+@switch(_config.Label.Position)
 {
 	case LabelPosition.Top:
 	case LabelPosition.TopLeft:
@@ -11,12 +11,12 @@
 	case LabelPosition.InlineTop:
 	case LabelPosition.InlineTopLeft:
 	case LabelPosition.InlineTopRight:
-		<DSCLabel Options="@Options" />
+		<DSCLabel Options="@_config" />
 		break;
 }
 
 <div class="col-12">
-	<div class="d-flex rounded dropdown @Options.TextColor @Options.BackgroundColor @Options.TextColor @((Options.Error) ? "error" : "")" data-for="@($"dropdown-list-{_ref}")">
+	<div class="d-flex rounded dropdown @_config.TextColor @_config.BackgroundColor @_config.TextColor @((_config.Error) ? "error" : "")" data-for="@($"dropdown-list-{_ref}")" @onclick="toggleDropdown" @onclick:stopPropagation @onclick:preventDefault>
 		<div class="col-10">
 			@if(_value?.Any() == true)
 			{
@@ -26,25 +26,28 @@
 				}
 			}
 		</div>
-		<i class="my-auto ml-auto caret caret-down"></i>
+		<i class="my-auto ml-auto caret @((_expanded) ? "caret-up": "caret-down")"></i>
 	</div>
 
-	<div class="dropdown-list" id="@($"dropdown-list-{_ref}")">
-		@if(Options.Searchable)
-		{
-			<DSCText Options="@Options" Callback="search" />
-		}
-
-		<ul class="p-0">
-			@foreach(KeyValuePair<object, object> item in _filteredItems)
+	@if(_expanded)
+	{
+		<div class="dropdown-list" id="@($"dropdown-list-{_ref}")">
+			@if(_config.Searchable)
 			{
-				<li class="px-1 @((_value?.ContainsKey(item.Key) == true) ? "selected" : "")" @onclick="@(() => onChange(item))">@item.Value</li>
+				<DSCText Options="@_config" Callback="search" />
 			}
-		</ul>
-	</div>
+
+			<ul class="p-0">
+				@foreach(KeyValuePair<object, object> item in _filteredItems)
+				{
+					<li class="px-1 @((_value?.ContainsKey(item.Key) == true) ? "selected" : "")" @onclick="@(() => onChange(item))">@item.Value</li>
+				}
+			</ul>
+		</div>
+	}
 </div>
 
-@switch(Options.Label.Position)
+@switch(_config.Label.Position)
 {
 	case LabelPosition.Bottom:
 	case LabelPosition.BottomLeft:
@@ -52,50 +55,71 @@
 	case LabelPosition.InlineBottom:
 	case LabelPosition.InlineBottomLeft:
 	case LabelPosition.InlineBottomRight:
-		<DSCLabel Options="@Options" />
+		<DSCLabel Options="@_config" />
 		break;
 }
+
 @code {
 	[CascadingParameter]
 	protected IDSCService DSCService { get; set; }
 	[Parameter]
 	public DSCInputConfig Options { get; set; }
 	[Parameter]
-	public EventCallback<string> Callback { get; set; }
+	public EventCallback<(bool, DSCInputConfig)> ExpandCallback { get; set; }
 
 	private DSCInputConfig _config;
+	private bool _expanded, _shouldRender;
 	private Dictionary<object, object> _filteredItems;
 	private Dictionary<object, string> _value;
 	private Guid _ref;
 
+	protected override void OnInitialized()
+	{
+		_ref = Guid.NewGuid();
+
+		_value = new Dictionary<object, string>();
+
+		base.OnInitialized();
+	}
+
 	protected override void OnParametersSet()
 	{
-		_value = new ();
-
 		_config = Options;
 
-		if (!DSCService.DSCInputConfigs.Contains(_config))
-			DSCService.DSCInputConfigs.ToList().Add(_config);
+		_config.Id = _ref;
 
-		_filteredItems = Options.Items;
+		_expanded = _config.Expanded;
 
-		_ref = Guid.NewGuid();
+		var configs = DSCService.DSCInputConfigs.ToList();
+
+		if (!configs.Contains(_config))
+			configs.Add(_config);
+
+		_filteredItems = _config.Items;	
+
+		DSCService.DSCInputConfigs = configs;
 
 		base.OnParametersSet();
 	}
 
-	private void search(string val) => _filteredItems = Options.Items.Where(i => i.Value.ToString().ToLower().Contains(val.ToLower())).ToDictionary(x => x.Key, y => y.Value);
+	protected override bool ShouldRender() => _shouldRender;
+
+	private void search(string val) => _filteredItems = _config.Items.Where(i => i.Value.ToString().ToLower().Contains(val.ToLower())).ToDictionary(x => x.Key, y => y.Value);
 
 	private void onChange(KeyValuePair<object, object> item)
 	{
-		if(!Options.Multiple)
-		{
-			_value = new();
-		}
-
 		if (!_value.ContainsKey(item.Key))
 			_value.Add(item.Key, item.Value.ToString());
 		else
 			_value.Remove(item.Key);
+	}
+
+	private void toggleDropdown()
+	{
+		_expanded = !_expanded;
+
+		ExpandCallback.InvokeAsync((_expanded, _config));
+
+		_shouldRender = true;
 	}
 }
