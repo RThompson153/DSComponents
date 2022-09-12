@@ -10,11 +10,7 @@ namespace DSComponents
 		public IEnumerable<DSCInputConfig> DSCInputConfigs 
 		{ 
 			get => _dscInputConfigs ?? new List<DSCInputConfig>();
-			set
-			{
-				_dscInputConfigs = value;
-			}
-			
+			set => _dscInputConfigs = value;		
 		}
 
 		public void ToggleDropdown(bool expanded, DSCInputConfig item)
