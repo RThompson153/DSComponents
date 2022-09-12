@@ -1,11 +1,40 @@
-﻿.dropdown {
+﻿.dropdown .dropdown-select {
 	min-height: 30px;
+	width: 100%;
+	display: flex;
 	border: 1px solid rgb(100, 100, 100);
+	border-radius: 0.25rem;
 	padding: 0.32rem;
 	cursor: pointer;
 }
 
+.dropdown .dropdown-select .dropdown-select-value{
+	max-width: 90%;
+}
+
+.dropdown .dropdown-select i{
+
+}
+
+.dropdown i.caret {
+	margin-top: auto;
+	margin-bottom: auto;
+	margin-left: auto;
+	border-radius: 100%;
+	border-left: 1rem solid transparent;
+	border-right: 1rem solid transparent;
+}
+
+.dropdown i.caret-up {
+	border-bottom: 1rem solid rgb(100, 100, 100);
+}
+
+.dropdown i.caret-down {
+	border-top: 1rem solid rgb(100, 100, 100);
+}
+
 .dropdown-list ul {
+	padding: 0;
 	list-style: none;
 	border: 1px solid rgb(100, 100, 100);
 	box-shadow: 2px 2px 5px rgba(100, 100, 100, 0.5);
@@ -13,6 +42,8 @@
 
 
 	.dropdown-list ul li {
+		padding-left: 1rem;
+		padding-right: 1rem;
 		cursor: pointer;
 	}
 
@@ -26,16 +57,4 @@
 			border-bottom: 1px solid rgb(255, 255, 255);
 		}
 
-.dropdown .caret {
-	border-radius: 100%;
-	border-left: 1rem solid transparent;
-	border-right: 1rem solid transparent;
-}
 
-.dropdown .caret-up {
-	border-bottom: 1rem solid rgb(100, 100, 100);
-}
-
-.dropdown .caret-down {
-	border-top: 1rem solid rgb(100, 100, 100);
-}

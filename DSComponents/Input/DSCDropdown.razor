@@ -15,9 +15,9 @@
 		break;
 }
 
-<div class="col-12">
-	<div class="d-flex rounded dropdown @_config.TextColor @_config.BackgroundColor @_config.TextColor @((_config.Error) ? "error" : "")" data-for="@($"dropdown-list-{_ref}")" @onclick="toggleDropdown" @onclick:stopPropagation @onclick:preventDefault>
-		<div class="col-10">
+<div class="dropdown">
+	<div class="dropdown-select @_config.TextColor @_config.BackgroundColor @_config.TextColor @((_config.Error) ? "error" : "")" data-for="@($"dropdown-list-{_ref}")" @onclick="toggleDropdown" @onclick:stopPropagation @onclick:preventDefault>
+		<div class="dropdown-select-value">
 			@if(_value?.Any() == true)
 			{
 				@foreach(KeyValuePair<object, string> item in _value)
@@ -26,21 +26,21 @@
 				}
 			}
 		</div>
-		<i class="my-auto ml-auto caret @((_expanded) ? "caret-up": "caret-down")"></i>
+		<i class="caret @((_expanded) ? "caret-up": "caret-down")"></i>
 	</div>
 
 	@if(_expanded)
 	{
-		<div class="dropdown-list" id="@($"dropdown-list-{_ref}")">
+		<div class="dropdown-list" id="@($"dropdown-list-{_ref}")" @onclick:stopPropagation @onclick:preventDefault>
 			@if(_config.Searchable)
 			{
 				<DSCText Options="@_config" Callback="search" />
 			}
 
-			<ul class="p-0">
+			<ul>
 				@foreach(KeyValuePair<object, object> item in _filteredItems)
 				{
-					<li class="px-1 @((_value?.ContainsKey(item.Key) == true) ? "selected" : "")" @onclick="@(() => onChange(item))">@item.Value</li>
+					<li class="@((_value?.ContainsKey(item.Key) == true) ? "selected" : "")" @onclick="@(() => onChange(item))">@item.Value</li>
 				}
 			</ul>
 		</div>
@@ -113,10 +113,16 @@
 
 	private void onChange(KeyValuePair<object, object> item)
 	{
+		if (!_config.Multiple)
+			_value = new();
+
 		if (!_value.ContainsKey(item.Key))
 			_value.Add(item.Key, item.Value.ToString());
 		else
 			_value.Remove(item.Key);
+
+		if (!_value.Any() || _value.Count() == _config.Items.Count() || !_config.Multiple)
+			_expanded = false;
 	}
 
 	private void toggleDropdown()
