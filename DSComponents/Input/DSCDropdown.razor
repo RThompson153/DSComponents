@@ -90,16 +90,21 @@
 
 		_expanded = _config.Expanded;
 
+		_filteredItems = _config.Items;	
+
+		base.OnParametersSet();
+	}
+
+	protected override void OnAfterRender(bool firstRender)
+	{
 		var configs = DSCService.DSCInputConfigs.ToList();
 
 		if (!configs.Contains(_config))
 			configs.Add(_config);
 
-		_filteredItems = _config.Items;	
-
 		DSCService.DSCInputConfigs = configs;
 
-		base.OnParametersSet();
+		base.OnAfterRender(firstRender);
 	}
 
 	protected override bool ShouldRender() => _shouldRender;

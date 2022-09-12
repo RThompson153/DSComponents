@@ -17,10 +17,9 @@ namespace DSComponents
 			
 		}
 
-
 		public void ToggleDropdown(bool expanded, DSCInputConfig item)
 		{
-			foreach(var dsci in DSCInputConfigs)
+			foreach (var dsci in DSCInputConfigs)
 				dsci.Expanded = false;
 
 			item.Expanded = expanded;
