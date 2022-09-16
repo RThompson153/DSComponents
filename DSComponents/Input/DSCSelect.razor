@@ -1,0 +1,70 @@
+﻿@using System.Linq
+@using DSComponents
+@using DSComponents.Input.Enums
+@using DSComponents.Input.Models
+@inject IDSCService DSCService
+
+<div class="dscselect" @onclick:stopPropagation>
+	<div class="dscselect-select" @onclick="toggleSelectMenu">
+	</div>
+
+	@if(_expanded)
+	{
+		<div class="dscselect-select-menu">
+			<ul class="bg-white">
+				@ChildContent	
+			</ul>
+		</div>
+			@*<DSCSelectMenu @bind-Expanded="@_expanded" @bind-Value="@Config.Value">
+				@ChildContent
+			</DSCSelectMenu>*@
+	}
+</div>
+
+@code {
+	[Parameter]
+	public DSCInputConfig Config { get; set; }
+
+	[Parameter]
+	public bool Expanded 
+	{
+		get => _expanded; 
+		set
+		{
+			if (_expanded == value) return;
+
+			_expanded = value;
+
+			ExpandedChanged.InvokeAsync(value);
+		}
+	}
+	[Parameter]
+	public EventCallback<bool> ExpandedChanged { get; set; }
+	[Parameter]
+	public RenderFragment ChildContent { get; set; }
+
+	private bool _expanded;
+
+	protected override void OnParametersSet()
+	{
+		var configs = DSCService.DSCInputConfigs.ToList();
+
+		if (!configs.Contains(Config))
+			configs.Add(Config);
+
+		DSCService.DSCInputConfigs = configs;
+
+		base.OnParametersSet();
+	}
+
+	private void toggleSelectMenu()
+	{
+		foreach (var config in DSCService.DSCInputConfigs.ToList())
+			config.Expanded = false;
+
+		Expanded = !Expanded;
+
+		Config.HasFocus = Expanded;
+			
+	}
+}

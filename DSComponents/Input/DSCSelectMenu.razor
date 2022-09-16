@@ -1,0 +1,52 @@
+﻿@using DSComponents.Input.Models
+@inject IDSCService DSCService
+
+<div class="dscselect-select-menu">
+    @if(_expanded)
+    {
+        <ul class="bg-white" @onclick="selectItem">
+            @ChildContent	
+        </ul>
+    }
+</div>
+
+@code {
+    [CascadingParameter]
+    protected DSCInputConfig Config { get; set; }
+    [Parameter]
+	public bool Expanded 
+	{
+		get => _expanded; 
+		set
+		{
+			if (_expanded == value) return;
+
+			_expanded = value;
+
+			ExpandedChanged.InvokeAsync(value);
+		}
+	}
+	[Parameter]
+	public EventCallback<bool> ExpandedChanged { get; set; }
+    [Parameter]
+    public object Value
+    {
+        set => ValueChanged.InvokeAsync(value);
+    }
+
+    [Parameter]
+    public EventCallback<object> ValueChanged { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    private bool _expanded;
+
+    private void selectItem()
+    {
+        Value = Config.Value;
+
+        //if (!Config.Multiple)
+        //    Expanded = false;
+    }
+}

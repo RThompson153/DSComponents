@@ -1,0 +1,36 @@
+﻿@using DSComponents.Input.Models
+@inject IDSCService DSCService
+
+<li class="@((_selected) ? "selected" : "")" @onclick="selectItem">@Value</li>
+
+@code {
+    [Parameter]
+    public object Value { get; set; }
+    private bool _selected;
+    private DSCInputConfig _config;
+
+    protected override void OnParametersSet()
+    {
+        _config = DSCService.DSCInputConfigs.FirstOrDefault(i => i.HasFocus);
+
+        if (_config.SelectedItems.Contains(Value) == true)
+            _selected = true;
+
+        base.OnParametersSet();
+    }
+
+    private void selectItem()
+    {
+        _selected = !_selected;
+
+        if (!_config.Multiple)
+        {
+            _config.SelectedItems = new List<object>();
+        }
+
+        if (_selected && !_config.SelectedItems.Contains(Value))
+            _config.SelectedItems.Add(Value);
+
+        _config.Value = string.Join(",", _config.SelectedItems);
+    }
+}
