@@ -3,7 +3,7 @@
 @using DSComponents.Input.Models
 
 
-@switch(Options.Label.Position)
+@switch(Options.Label?.Position)
 {
 	case LabelPosition.Top:
 	case LabelPosition.TopLeft:
@@ -17,7 +17,7 @@
 
 <input type="text" class="col-12 rounded @Options.TextColor @Options.BackgroundColor @Options.TextColor @((Options.Error) ? "error" : "")" value="@_value" name="@Options.Name" maxlength="@Options.MaxLength" @oninput="onInput" @onfocus="onFocus" @onblur="onBlur" />
 
-@switch(Options.Label.Position)
+@switch(Options.Label?.Position)
 {
 	case LabelPosition.Bottom:
 	case LabelPosition.BottomLeft:

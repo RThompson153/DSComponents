@@ -13,6 +13,10 @@
 		@if(_expanded)
 		{
 			<div class="dscselect-select-menu" @onclick="selectItem">
+				@if(Config.Searchable)
+				{
+					<input type="text" class="col-12 rounded" @oninput="filterItems" @onclick:stopPropagation />
+				}
 				<ul class="bg-white">
 					@ChildContent	
 				</ul>
@@ -44,6 +48,13 @@
 	public RenderFragment ChildContent { get; set; }
 
 	private bool _expanded;
+	private List<object> _filteredList;
+
+	protected override void OnInitialized()
+	{
+		_filteredList = Config.SelectItems;
+		base.OnInitialized();
+	}
 
 	protected override void OnParametersSet()
 	{
@@ -55,6 +66,13 @@
 		DSCService.DSCInputConfigs = configs;
 
 		base.OnParametersSet();
+	}
+
+	private void filterItems(ChangeEventArgs val)
+	{
+		var search = val.Value.ToString();
+
+		Config.SelectItems = _filteredList.Where(i => i.ToString().ToLower().StartsWith(search)).ToList();
 	}
 
 	private void selectItem()
