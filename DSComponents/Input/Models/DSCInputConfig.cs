@@ -12,7 +12,7 @@ namespace DSComponents.Input.Models
 		public DSCLabelConfig Label { get; set; }
 		//public InputTypes Type { get; set; }
 		public string Name {get;set;}
-		public object Value { get; set; }
+		public List<object> Value { get; set; } = new();
 		public decimal? MinLength { get; set; }
 		public decimal? MaxLength { get; set; }
 		public double? Timeout { get; set; }
@@ -24,6 +24,6 @@ namespace DSComponents.Input.Models
 		public bool Error { get; set; }
 		public bool Expanded {get;set;}
 		public bool HasFocus { get; set; }
-		public List<object> SelectedItems { get; set; } = new();
+		public List<object> SelectItems { get; set; }
 	}
 }

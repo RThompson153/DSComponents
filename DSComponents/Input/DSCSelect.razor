@@ -5,20 +5,20 @@
 @inject IDSCService DSCService
 
 <div class="dscselect" @onclick:stopPropagation>
-	<div class="dscselect-select" @onclick="toggleSelectMenu">
-	</div>
-
-	@if(_expanded)
-	{
-		<div class="dscselect-select-menu">
-			<ul class="bg-white">
-				@ChildContent	
-			</ul>
+	<CascadingValue Value="@Config">
+		<div class="dscselect-select" @onclick="toggleSelectMenu">
+			<span>@(string.Join(",", Config.Value))</span>
 		</div>
-			@*<DSCSelectMenu @bind-Expanded="@_expanded" @bind-Value="@Config.Value">
-				@ChildContent
-			</DSCSelectMenu>*@
-	}
+
+		@if(_expanded)
+		{
+			<div class="dscselect-select-menu" @onclick="selectItem">
+				<ul class="bg-white">
+					@ChildContent	
+				</ul>
+			</div>
+		}
+	</CascadingValue>
 </div>
 
 @code {
@@ -57,14 +57,17 @@
 		base.OnParametersSet();
 	}
 
+	private void selectItem()
+	{
+		if (!Config.Multiple || !Config.Value.Any() || Config.Value.Count() == Config.SelectItems.Count())
+			Expanded = false;			
+	}
+
 	private void toggleSelectMenu()
 	{
 		foreach (var config in DSCService.DSCInputConfigs.ToList())
 			config.Expanded = false;
 
-		Expanded = !Expanded;
-
-		Config.HasFocus = Expanded;
-			
+		Expanded = !Expanded;			
 	}
 }
