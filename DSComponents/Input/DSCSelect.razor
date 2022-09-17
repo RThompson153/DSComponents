@@ -72,7 +72,7 @@
 	{
 		var search = val.Value.ToString();
 
-		Config.SelectItems = _filteredList.Where(i => i.ToString().ToLower().StartsWith(search)).ToList();
+		Config.SelectItems = _filteredList.Where(i => i.ToString().ToLower().Contains(search)).ToList();
 	}
 
 	private void selectItem()
