@@ -1,5 +1,4 @@
 ﻿.label-inline {
-	position: relative;
 	z-index: 1;
 }
 
@@ -21,11 +20,15 @@
 
 .label-inline label {
 	position: absolute;
+	left: 0;
+	right: 0;
 	height: 0.1rem;
 }
 
 .label-inline.top label span, .label-inline.bottom label span {
-	transform: translateY(-0.7rem);
+	display: flex;
+	justify-content: center;
+	transform: translateY(-0.6rem);
 }
 
 .error {

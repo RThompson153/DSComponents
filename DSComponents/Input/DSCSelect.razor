@@ -5,19 +5,32 @@
 @inject IDSCService DSCService
 
 <div class="dscselect" @onclick:stopPropagation>
+	@*<div class="label">
+		<div class="label-inline top" style="height: 0.1rem; display: flex; justify-content: center;">
+			<span style="position: absolute; transform: translateY(-0.7rem); background-color: white;">Label</span>
+		</div>
+	</div>*@
 	<CascadingValue Value="@Config">
 		<div class="dscselect-select" @onclick="toggleSelectMenu">
+			<div class="label">
+				<div class="label-inline top" style="height: 0.1rem; display: flex; justify-content: center;">
+					<span style="position: absolute; transform: translateY(-0.75rem); background-color: white;">Label</span>
+				</div>
+			</div>
 			<span>@(string.Join(",", Config.Value))</span>
 		</div>
 
 		@if(_expanded)
 		{
 			<div class="dscselect-select-menu" @onclick="selectItem">
-				@if(Config.Searchable)
-				{
-					<input type="text" class="col-12 rounded" @oninput="filterItems" @onclick:stopPropagation />
-				}
 				<ul class="bg-white">
+					@if(Config.Searchable)
+					{
+						<div class="dscselect-search">
+							<input type="text" class="col-12" placeholder="Search..." @oninput="filterItems" @onclick:stopPropagation />
+						</div>
+					}
+
 					@ChildContent	
 				</ul>
 			</div>
@@ -53,6 +66,7 @@
 	protected override void OnInitialized()
 	{
 		_filteredList = Config.SelectItems;
+
 		base.OnInitialized();
 	}
 

@@ -12,8 +12,8 @@
 		<label class="col-12 m-0 p-0 text-right @Options.Label.Color @((Options.Error) ? "error" : "")" for="@Options.Name">@Options.Label.Label</label>
 		break;
 	case LabelPosition.InlineTop:
-		<div class="label-inline top col-12 d-flex m-0">
-			<label class="d-flex mx-auto @Options.Label.Color @((!string.IsNullOrEmpty(Options.BackgroundColor)) ? Options.BackgroundColor : "default-background") @((Options.Error) ? "error" : "")" for="@Options.Name">
+		<div class="label-inline top">
+			<label class="@Options.Label.Color @((!string.IsNullOrEmpty(Options.BackgroundColor)) ? Options.BackgroundColor : "default-background") @((Options.Error) ? "error" : "")" for="@Options.Name">
 				<span class="px-1">@Options.Label.Label</span>
 			</label>
 		</div>
