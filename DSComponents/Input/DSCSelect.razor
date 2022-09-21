@@ -5,33 +5,33 @@
 @inject IDSCService DSCService
 
 <div class="dscselect" @onclick:stopPropagation>
-	@*<div class="label">
-		<div class="label-inline top" style="height: 0.1rem; display: flex; justify-content: center;">
-			<span style="position: absolute; transform: translateY(-0.7rem); background-color: white;">Label</span>
-		</div>
-	</div>*@
+	
 	<CascadingValue Value="@Config">
 		<div class="dscselect-select" @onclick="toggleSelectMenu">
-			<div class="label">
-				<div class="label-inline top" style="height: 0.1rem; display: flex; justify-content: center;">
-					<span style="position: absolute; transform: translateY(-0.75rem); background-color: white;">Label</span>
-				</div>
-			</div>
-			<span>@(string.Join(",", Config.Value))</span>
+			<DSCLabel Config="@Config.Label" BGColor="@Config.BackgroundColor" />
+
+			<p>@(string.Join(",", Config.Value))</p>
 		</div>
 
 		@if(_expanded)
 		{
 			<div class="dscselect-select-menu" @onclick="selectItem">
-				<ul class="bg-white">
+				<ul class="@Config.BackgroundColor">
 					@if(Config.Searchable)
 					{
-						<div class="dscselect-search">
-							<input type="text" class="col-12" placeholder="Search..." @oninput="filterItems" @onclick:stopPropagation />
+						<div class="dscselect-search" @onclick:stopPropagation>
+							<input type="text" placeholder="Search..." @oninput="filterItems" />
 						</div>
 					}
 
-					@ChildContent	
+					@if(Config.SelectItems.Any())
+					{
+						@ChildContent
+					}
+					else
+					{
+						<h6 class="empty-list">No Items</h6>
+					}
 				</ul>
 			</div>
 		}
@@ -82,6 +82,11 @@
 		base.OnParametersSet();
 	}
 
+	private void onFocus()
+	{
+
+	}
+
 	private void filterItems(ChangeEventArgs val)
 	{
 		var search = val.Value.ToString();
@@ -97,6 +102,8 @@
 
 	private void toggleSelectMenu()
 	{
+		Config.SelectItems = _filteredList;
+
 		foreach (var config in DSCService.DSCInputConfigs.ToList())
 			config.Expanded = false;
 

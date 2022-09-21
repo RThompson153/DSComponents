@@ -16,18 +16,6 @@
 
 <input type="number" class="col-12 rounded @Options.TextColor @Options.BackgroundColor @((Options.Error) ? "error" : "")" value="@_value" name="@Options.Name" min="@Options.MinLength" max="@Options.MaxLength" @oninput="onChange" @onfocus="onFocus" @onblur="onBlur" />
 
-@switch(Options.Label.Position)
-{
-	case LabelPosition.Bottom:
-	case LabelPosition.BottomLeft:
-	case LabelPosition.BottomRight:
-	case LabelPosition.InlineBottom:
-	case LabelPosition.InlineBottomLeft:
-	case LabelPosition.InlineBottomRight:
-		<LabelComponent Options="@Options" />
-		break;
-}
-
 @code {
 	[Parameter]
 	public DSCInputConfig Options { get; set; }

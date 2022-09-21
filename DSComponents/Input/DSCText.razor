@@ -1,4 +1,4 @@
-﻿@using System.Timers
+﻿@*@using System.Timers
 @using DSComponents.Input.Enums
 @using DSComponents.Input.Models
 
@@ -75,3 +75,4 @@
 	private void setError() => Options.Error = (!string.IsNullOrEmpty(_value) && (Options.MinLength is not null && _value.Length < Options.MinLength) 
 		|| (Options.MaxLength is not null && _value.Length > Options.MaxLength));
 }
+*@

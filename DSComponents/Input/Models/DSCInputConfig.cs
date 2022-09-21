@@ -18,8 +18,7 @@ namespace DSComponents.Input.Models
 		public double? Timeout { get; set; }
 		public bool Multiple { get; set; }
 		public bool Searchable { get; set; }
-		public string FontSize {get;set;}
-		public string TextColor { get; set; }
+		public string TextColor { get; set; } = "text-dark";
 		public string BackgroundColor { get; set; } = "bg-white";
 		public bool Error { get; set; }
 		public bool Expanded {get;set;}
