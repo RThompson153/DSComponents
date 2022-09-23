@@ -5,12 +5,12 @@
 @inject IDSCService DSCService
 
 <div class="dscselect" @onclick:stopPropagation>
-	
 	<CascadingValue Value="@Config">
-		<div class="dscselect-select" @onclick="toggleSelectMenu">
+		<div class="dscselect-select @Config.BackgroundColor @((Config.Error) ? "error" : "")" @onclick="toggleSelectMenu">
 			<DSCLabel Config="@Config.Label" BGColor="@Config.BackgroundColor" />
 
-			<p>@(string.Join(",", Config.Value))</p>
+			<p class="dscselect-content">@(string.Join(",", Config.Value))</p>
+			<i class="chevron chevron-@((_expanded) ? "up" : "down")"></i>
 		</div>
 
 		@if(_expanded)
@@ -79,6 +79,12 @@
 
 		DSCService.DSCInputConfigs = configs;
 
+		if (Config.Disabled)
+			Config.BackgroundColor = "disabled";
+
+		Config.Minimum = Config.Minimum ?? 0;
+		Config.Maximum = Config.Maximum ?? Config.SelectItems.Count();
+
 		base.OnParametersSet();
 	}
 
@@ -96,12 +102,17 @@
 
 	private void selectItem()
 	{
-		if (!Config.Multiple || !Config.Value.Any() || Config.Value.Count() == Config.SelectItems.Count())
+		Config.Error = (Config.Value.Count() < Config.Minimum) || (Config.Value.Count() > Config.Maximum);
+
+		if (!Config.Multiple || !Config.Value.Any() || Config.Value.Count() == Config.Maximum)
 			Expanded = false;			
 	}
 
 	private void toggleSelectMenu()
 	{
+		if (Config.Disabled)
+			return;
+
 		Config.SelectItems = _filteredList;
 
 		foreach (var config in DSCService.DSCInputConfigs.ToList())

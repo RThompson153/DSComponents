@@ -14,7 +14,7 @@
 		break;
 }
 
-<input type="number" class="col-12 rounded @Options.TextColor @Options.BackgroundColor @((Options.Error) ? "error" : "")" value="@_value" name="@Options.Name" min="@Options.MinLength" max="@Options.MaxLength" @oninput="onChange" @onfocus="onFocus" @onblur="onBlur" />
+<input type="number" class="col-12 rounded @Options.TextColor @Options.BackgroundColor @((Options.Error) ? "error" : "")" value="@_value" name="@Options.Name" min="@Options.Minimum" max="@Options.Maximum" @oninput="onChange" @onfocus="onFocus" @onblur="onBlur" />
 
 @code {
 	[Parameter]
@@ -64,6 +64,6 @@
 
 	private void onBlur() => Options.Error = false;
 
-	private void setError() => Options.Error = (_value > 0 && (Options.MinLength is not null && _value < Options.MinLength) 
-		|| (Options.MaxLength is not null && _value > Options.MaxLength));
+	private void setError() => Options.Error = (_value > 0 && (Options.Minimum is not null && _value < Options.Minimum) 
+		|| (Options.Maximum is not null && _value > Options.Maximum));
 }

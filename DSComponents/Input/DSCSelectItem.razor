@@ -34,6 +34,12 @@
         else
             Config.Value.Remove(Value);
 
+        if(Config.Value.Count() > Config.Maximum)
+        {
+            Config.Value.Remove(Value);
+            _selected = false;
+        }
+
         if (SelectCallback is not null)
             SelectCallback?.InvokeAsync();
     }
