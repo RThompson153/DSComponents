@@ -6,17 +6,17 @@
 	@switch(Config.Position)
 	{
 		case LabelPosition.InlineTop:
-			<div class="label-inline top center @BGColor">
+			<div class="label-inline top center @TextColor @BGColor">
 				<span class="label">@Config.Label</span>
 			</div>
 			break;
 		case LabelPosition.InlineTopLeft:
-			<div class="label-inline top left @BGColor">
+			<div class="label-inline top left @TextColor @BGColor">
 				<span class="label">@Config.Label</span>
 			</div>
 			break;
 		case LabelPosition.InlineTopRight:
-			<div class="label-inline top right @BGColor">
+			<div class="label-inline top right @TextColor @BGColor">
 				<span class="label">@Config.Label</span>
 			</div>
 			break;
@@ -26,6 +26,8 @@
 @code {
 	[Parameter]
 	public DSCLabelConfig Config { get; set; }
+	[Parameter]
+	public string TextColor { get; set; }
 
 	[Parameter]
 	public string BGColor { get; set; }

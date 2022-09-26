@@ -6,8 +6,8 @@
 
 <div class="dscselect" @onclick:stopPropagation>
 	<CascadingValue Value="@Config">
-		<div class="dscselect-select @Config.BackgroundColor @((Config.Error) ? "error" : "")" @onclick="toggleSelectMenu">
-			<DSCLabel Config="@Config.Label" BGColor="@Config.BackgroundColor" />
+		<div class="dscselect-select @Config.TextColor @bg @((Config.Error) ? "error" : "")" @onclick="toggleSelectMenu">
+			<DSCLabel Config="@Config.Label" TextColor="@Config.TextColor" BGColor="@bg" />
 
 			<p class="dscselect-content">@(string.Join(",", Config.Value))</p>
 			<i class="chevron chevron-@((_expanded) ? "up" : "down")"></i>
@@ -16,7 +16,7 @@
 		@if(_expanded)
 		{
 			<div class="dscselect-select-menu" @onclick="selectItem">
-				<ul class="@Config.BackgroundColor">
+				<ul class="@Config.TextColor @bg">
 					@if(Config.Searchable)
 					{
 						<div class="dscselect-search" @onclick:stopPropagation>
@@ -62,6 +62,7 @@
 
 	private bool _expanded;
 	private List<object> _filteredList;
+	private string bg;
 
 	protected override void OnInitialized()
 	{
@@ -79,8 +80,9 @@
 
 		DSCService.DSCInputConfigs = configs;
 
-		if (Config.Disabled)
-			Config.BackgroundColor = "disabled";
+		bg = (Config.Disabled)
+			? "disabled"
+			: Config.BackgroundColor;
 
 		Config.Minimum = Config.Minimum ?? 0;
 		Config.Maximum = Config.Maximum ?? Config.SelectItems.Count();

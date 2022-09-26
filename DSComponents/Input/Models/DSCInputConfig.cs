@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace DSComponents.Input.Models
 {
 	public class DSCInputConfig
 	{
-		public Guid Id {get;set;}
 		public DSCLabelConfig Label { get; set; }
 		public string Name { get; set; }
 		public List<object> Value { get; set; } = new();

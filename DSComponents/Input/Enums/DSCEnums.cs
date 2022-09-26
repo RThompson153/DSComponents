@@ -8,6 +8,6 @@ namespace DSComponents.Input.Enums
 {
 	public enum LabelPosition
 	{
-		Top, Left, Right, TopLeft, TopRight, InlineTop, InlineBottom, InlineTopLeft, InlineTopRight
+		Top, Left, Right, TopLeft, TopRight, InlineTop, InlineTopLeft, InlineTopRight
 	}
 }
