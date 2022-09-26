@@ -6,18 +6,24 @@
 	@switch(Config.Position)
 	{
 		case LabelPosition.InlineTop:
-			<div class="label-inline top center @TextColor @BGColor">
-				<span class="label">@Config.Label</span>
+			<div class="center top">
+				<div class="label-inline @TextColor @BGColor">
+					<span class="label">@Config.Label</span>
+				</div>
 			</div>
 			break;
 		case LabelPosition.InlineTopLeft:
-			<div class="label-inline top left @TextColor @BGColor">
-				<span class="label">@Config.Label</span>
+			<div class="top left">
+				<div class="label-inline @TextColor @BGColor">
+					<span class="label">@Config.Label</span>
+				</div>
 			</div>
 			break;
 		case LabelPosition.InlineTopRight:
-			<div class="label-inline top right @TextColor @BGColor">
-				<span class="label">@Config.Label</span>
+			<div class="top right">
+				<div class="label-inline @TextColor @BGColor">
+					<span class="label">@Config.Label</span>
+				</div>
 			</div>
 			break;
 	}

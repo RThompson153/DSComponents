@@ -9,8 +9,11 @@
 		<div class="dscselect-select @Config.TextColor @bg @((Config.Error) ? "error" : "")" @onclick="toggleSelectMenu">
 			<DSCLabel Config="@Config.Label" TextColor="@Config.TextColor" BGColor="@bg" />
 
-			<p class="dscselect-content">@(string.Join(",", Config.Value))</p>
-			<i class="chevron chevron-@((_expanded) ? "up" : "down")"></i>
+			<div class="dscselect-content">
+				<span class="">@(string.Join(",", Config.Value))</span>
+				<i class="chevron chevron-@((_expanded) ? "up" : "down")"></i>
+			</div>
+			
 		</div>
 
 		@if(_expanded)
