@@ -27,7 +27,7 @@
 
 	protected override void OnParametersSet()
 	{
-		tryParseInt(Options.Value.ToString());
+		tryParseInt(Options.SelectValues.ToString());
 
 		if(Options.Timeout is not null)
 		{

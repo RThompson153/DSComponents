@@ -16,7 +16,7 @@
 
     protected override void OnParametersSet()
     {
-        if (Config.Value.Contains(Value) == true)
+        if (Config.SelectValues.Contains(Value) == true)
             _selected = true;
 
         base.OnParametersSet();
@@ -27,16 +27,16 @@
         _selected = !_selected;
 
         if (!Config.Multiple)
-            Config.Value = new List<object>();
+            Config.SelectValues = new List<object>();
 
-        if (_selected && !Config.Value.Contains(Value))
-            Config.Value.Add(Value);
+        if (_selected && !Config.SelectValues.Contains(Value))
+            Config.SelectValues.Add(Value);
         else
-            Config.Value.Remove(Value);
+            Config.SelectValues.Remove(Value);
 
-        if(Config.Value.Count() > Config.Maximum)
+        if(Config.SelectValues.Count() > Config.Maximum)
         {
-            Config.Value.Remove(Value);
+            Config.SelectValues.Remove(Value);
             _selected = false;
         }
 

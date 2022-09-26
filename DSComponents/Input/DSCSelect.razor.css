@@ -39,14 +39,6 @@
     font-weight: bold;
 }
 
-.dscselect-search input{
-    width: 100%;
-}
-
-.dscselect-search input:focus{
-    outline: none;
-}
-
 .disabled {
     background-color: rgb(150, 150, 150);
 }

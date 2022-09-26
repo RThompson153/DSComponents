@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Components;
+using System.Collections.Generic;
 
 namespace DSComponents.Input.Models
 {
@@ -6,7 +7,8 @@ namespace DSComponents.Input.Models
 	{
 		public DSCLabelConfig Label { get; set; }
 		public string Name { get; set; }
-		public List<object> Value { get; set; } = new();
+		public string Placeholder { get; set; }
+		public List<object> SelectValues { get; set; } = new();
 		public decimal? Minimum { get; set; }
 		public decimal? Maximum { get; set; }
 		public double? Timeout { get; set; }
@@ -17,7 +19,7 @@ namespace DSComponents.Input.Models
 		public bool Error { get; set; }
 		public bool Expanded { get; set; }
 		public bool Disabled { get; set; }
-		public bool HasFocus { get; set; }
+		public bool HasDelegate { get; set; }
 		public List<object> SelectItems { get; set; }
 	}
 }
