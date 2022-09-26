@@ -1,6 +1,7 @@
 ﻿@using System.Timers
 @using DSComponents.Input.Enums
 @using DSComponents.Input.Models
+@using System.Text.RegularExpressions
 @inject IDSCService DSCService
 
 <div class="dsctext" @onclick:stopPropagation>
@@ -11,7 +12,7 @@
 				<DSCLabel Config="@Config.Label" TextColor="@Config.TextColor" BGColor="@_bg" />
 			}
 
-			<input type="text" class="dsctext-content" placeholder="@Config.Placeholder" name="@Config.Name" value="@_value" min="@Config.Minimum" maxlength="@Config.Maximum" @oninput="onInput" @onfocusin="onFocusIn" disabled="@Config.Disabled" />
+			<input type="text" class="dsctext-content" placeholder="@Config.Placeholder" name="@Config.Name" value="@_value" min="@Config.Minimum" maxlength="@Config.Maximum" @oninput="onInput" @onkeyup="onKeyup" @onfocusin="onFocusIn" disabled="@Config.Disabled" />
 		</div>
 	</CascadingValue>
 </div>
@@ -23,16 +24,21 @@
 	public EventCallback<string> OnInput { get; set; }
 	[Parameter]
 	public bool HideLabel { get; set; }
+	[Parameter]
+	public IgnorePattern Ignore { get; set; }
+	[Parameter]
+	public string Pattern { get; set; }
 
 	private Timer _timer;
-	private string _bg, _value;
+	private string _bg, _value, _pattern;
 
 	protected override void OnInitialized()
 	{
-		Config.HasDelegate = OnInput.HasDelegate;
-
 		if(Config.Timeout is not null && !OnInput.HasDelegate)
 			throw new Exception("A timeout call back is required when providing a timeout value.");
+
+		if (Ignore == IgnorePattern.Custom && Pattern is null)
+			throw new Exception("A pattern must be provided to ignore a custom character set.");
 
 		base.OnInitialized();
 	}
@@ -45,6 +51,15 @@
 			configs.Add(Config);
 
 		DSCService.DSCInputConfigs = configs;
+
+		_pattern = Ignore switch
+		{
+			IgnorePattern.Alpha => "[a-zA-Z]+",
+			IgnorePattern.Numeric => "[0-9]+",
+			IgnorePattern.AlphaNumeric => "[a-zA-Z0-9]+",
+			IgnorePattern.Special => "[^a-zA-Z0-9]+",
+			IgnorePattern.Custom => Pattern
+		};
 
 		if(Config.Timeout is not null)
 		{
@@ -68,6 +83,15 @@
 	{
 		_value = val.Value.ToString();
 
+		
+	}
+
+	private void onKeyup(KeyboardEventArgs e)
+	{
+		_value = Regex.Replace(_value, _pattern, "");
+
+		setError();
+
 		if(_timer is null)
 		{
 			OnInput.InvokeAsync(_value);
@@ -81,11 +105,8 @@
 
 	private void onFocusIn() => setError();
 
-	private void onFocusOut()
-	{}
-
-	private void setError() => Config.Error = (!string.IsNullOrEmpty(_value) && (Config.Minimum is not null && _value.Length < Config.Minimum) 
-		|| (Config.Maximum is not null && _value.Length > Config.Maximum));
+	private void setError() => Config.Error = ((Config.Minimum is not null && _value?.Length < Config.Minimum) 
+		|| (Config.Maximum is not null && _value?.Length > Config.Maximum));
 
 	private void timeout() => OnInput.InvokeAsync(_value);
 }

@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DSComponents.Input.Enums
+﻿namespace DSComponents.Input.Enums
 {
 	public enum LabelPosition
 	{
 		Top, Left, Right, TopLeft, TopRight, InlineTop, InlineTopLeft, InlineTopRight
+	}
+
+	public enum IgnorePattern
+	{
+		Alpha, Numeric, AlphaNumeric, Special, Custom
 	}
 }

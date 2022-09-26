@@ -19,7 +19,6 @@ namespace DSComponents.Input.Models
 		public bool Error { get; set; }
 		public bool Expanded { get; set; }
 		public bool Disabled { get; set; }
-		public bool HasDelegate { get; set; }
 		public List<object> SelectItems { get; set; }
 	}
 }
