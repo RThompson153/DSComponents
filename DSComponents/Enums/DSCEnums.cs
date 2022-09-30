@@ -9,4 +9,9 @@
 	{
 		Alpha, Numeric, AlphaNumeric, Special, Custom
 	}
+
+	public enum Position
+    {
+		Top, Left, Right, Bottom
+    }
 }

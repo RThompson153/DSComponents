@@ -13,7 +13,12 @@
 			}
 
 			<input type="text" class="dsctext-content" placeholder="@Config.Placeholder" name="@Config.Name" value="@_value" min="@Config.Minimum" maxlength="@Config.Maximum" @oninput="onInput" @onkeyup="onKeyup" @onfocusin="onFocusIn" disabled="@Config.Disabled" />
+			
 		</div>
+		@*@if(!string.IsNullOrEmpty(_error))
+		{
+			<span class="error">! @_error</span>
+		}*@
 	</CascadingValue>
 </div>
 
@@ -21,16 +26,16 @@
 	[Parameter]
 	public DSCInputConfig Config { get; set; }
 	[Parameter]
-	public EventCallback<string> OnInput { get; set; }
-	[Parameter]
 	public bool HideLabel { get; set; }
 	[Parameter]
 	public IgnorePattern Ignore { get; set; }
 	[Parameter]
 	public string Pattern { get; set; }
+	[Parameter]
+	public EventCallback<string> OnInput { get; set; }
 
 	private Timer _timer;
-	private string _bg, _value, _pattern;
+	private string _bg, _value, _pattern, _error;
 
 	protected override void OnInitialized()
 	{
@@ -81,9 +86,25 @@
 
 	private void onInput(ChangeEventArgs val)
 	{
+		_timer?.Stop();
+
 		_value = val.Value.ToString();
 
-		
+		var match = Regex.IsMatch(_value, _pattern);
+
+		if(match)
+		{
+			_error = Ignore switch
+			{
+				IgnorePattern.Alpha => "Alpha characters are not allowed.",
+				IgnorePattern.Numeric => "Numeric characters are not allowed.",
+				IgnorePattern.AlphaNumeric => "Alpha and Numeric characters are not allowed.",
+				IgnorePattern.Special => "Special characters and symbols are not allowed.",
+				IgnorePattern.Custom => ""
+			};
+
+			Config.Error = true;
+		}
 	}
 
 	private void onKeyup(KeyboardEventArgs e)
@@ -93,14 +114,9 @@
 		setError();
 
 		if(_timer is null)
-		{
 			OnInput.InvokeAsync(_value);
-		}
 		else
-		{
-			_timer.Stop();
 			_timer.Start();
-		}
 	}
 
 	private void onFocusIn() => setError();
