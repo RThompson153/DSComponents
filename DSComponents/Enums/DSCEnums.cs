@@ -1,8 +1,8 @@
 ﻿namespace DSComponents.Input.Enums
 {
-	public enum LabelPosition
+	public enum Position
 	{
-		Top, Left, Right, TopLeft, TopRight, InlineTop, InlineTopLeft, InlineTopRight
+		Top, Left, Right, Bottom, TopLeft, TopRight, InlineTop, InlineTopLeft, InlineTopRight
 	}
 
 	public enum IgnorePattern
@@ -10,8 +10,8 @@
 		Alpha, Numeric, AlphaNumeric, Special, Custom
 	}
 
-	public enum Position
-    {
-		Top, Left, Right, Bottom
-    }
+	public enum NumericType
+	{
+		Int, Double, Decimal, Long
+	}
 }

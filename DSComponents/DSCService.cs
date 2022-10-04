@@ -6,14 +6,14 @@ namespace DSComponents
 {
 	public class DSCService : IDSCService
 	{
-        private IEnumerable<DSCInputConfig> _dscInputConfigs;
-        public IEnumerable<DSCInputConfig> DSCInputConfigs
+        private IEnumerable<DSCConfig> _dscInputConfigs;
+        public IEnumerable<DSCConfig> DSCInputConfigs
         {
-            get => _dscInputConfigs ?? new List<DSCInputConfig>();
+            get => _dscInputConfigs ?? new List<DSCConfig>();
             set => _dscInputConfigs = value;
         }
 
-        public void ToggleDropdown(bool expanded, DSCInputConfig item)
+        public void ToggleDropdown(bool expanded, DSCConfig item)
         {
             foreach (var dsci in DSCInputConfigs)
                 dsci.Expanded = false;
