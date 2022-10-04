@@ -3,7 +3,6 @@
 @using DSComponents.Input.Models
 @using System.Text.RegularExpressions
 @inject IDSCService DSCService
-@typeparam T
 
 <div class="dscnumber" @onclick:stopPropagation>
 	<CascadingValue Value="@Config">
@@ -29,14 +28,13 @@
 	[Parameter]
 	public bool HideLabel { get; set; }
 	[Parameter]
-	public IgnorePattern Ignore { get; set; }
-	[Parameter]
-	public string Pattern { get; set; }
+	public bool HideButtons { get; set; }
 	[Parameter]
 	public EventCallback<object> OnInput { get; set; }
 
 	private Timer _timer;
-	private string _bg, _value, _pattern, _error;
+	private object _value;
+	private string _bg, _error;
 
 	protected override void OnInitialized()
 	{
@@ -77,7 +75,14 @@
 	{
 		_timer?.Stop();
 
-		_value = val.Value;
+		_value = Config.Type switch
+		{
+			NumericType.Int => int.TryParse(val.Value?.ToString(), out int _value),
+			NumericType.Decimal => decimal.TryParse(val.Value?.ToString(), out decimal _value),
+			NumericType.Double => double.TryParse(val.Value?.ToString(), out double _value),
+			NumericType.Long => long.TryParse(val.Value?.ToString(), out long _value),
+			_ => throw new Exception("Input is not a numeric type.")
+		};
 
 		setError();
 
