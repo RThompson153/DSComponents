@@ -1,7 +1,52 @@
-﻿
+﻿@using DSComponents.Enums
+
+<div class="dscpopover">
+    @if(Open)
+    {
+        <div class="dialog @_position">
+            <div class="head">@Title</div>
+
+            <div class="body">@Content</div>
+        </div>
+    }
+</div>
+
 @code {
     [Parameter]
-    public bool Open { get; set; }
+    public bool Open 
+    { 
+        get => _open;
+        set
+        {
+            if (_open == value) return;
+
+            _open = value;
+
+            OpenChanged.InvokeAsync(value);
+        }
+    }
     [Parameter]
-    public string Position { get; set; }
+    public RenderFragment Title { get; set; }
+    [Parameter]
+    public RenderFragment Content { get; set; }
+    [Parameter]
+    public Position Position { get; set; }
+    [Parameter]
+    public EventCallback<bool> OpenChanged { get; set; }
+
+    private bool _open;
+    private string _position;
+
+    protected override void OnParametersSet()
+    {
+        _position = Position switch
+        {
+            Position.Top => "top",
+            Position.Left => "left",
+            Position.Right => "right",
+            Position.Bottom => "bottom",
+            _ => ""
+        };
+        base.OnParametersSet();
+    }
 }

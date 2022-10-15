@@ -1,5 +1,5 @@
 ﻿@using System.Timers
-@using DSComponents.Input.Enums
+@using DSComponents.Enums
 @using DSComponents.Input.Models
 @using System.Text.RegularExpressions
 @inject IDSCService DSCService
@@ -12,13 +12,9 @@
 				<DSCLabel Config="@Config.Label" TextColor="@Config.TextColor" BGColor="@_bg" />
 			}
 
-			<input type="number" class="dscnumber-content" placeholder="@Config.Placeholder" name="@Config.Name" value="@_value" min="@Config.Minimum" maxlength="@Config.Maximum" @onchange="onInput" @onfocusin="onFocusIn" disabled="@Config.Disabled" />
+			<input type="number" class="dscnumber-content @((HideSpin) ? "hide-spin" : "")" placeholder="@Config.Placeholder" name="@Config.Name" value="@_value" min="@Config.Minimum" maxlength="@Config.Maximum" @onchange="onInput" @oninput="onInput" @onfocusin="onFocusIn" disabled="@Config.Disabled" />
 			
 		</div>
-		@*@if(!string.IsNullOrEmpty(_error))
-		{
-			<span class="error">! @_error</span>
-		}*@
 	</CascadingValue>
 </div>
 
@@ -28,7 +24,7 @@
 	[Parameter]
 	public bool HideLabel { get; set; }
 	[Parameter]
-	public bool HideButtons { get; set; }
+	public bool HideSpin { get; set; }
 	[Parameter]
 	public EventCallback<object> OnInput { get; set; }
 
@@ -74,15 +70,26 @@
 	private void onInput(ChangeEventArgs val)
 	{
 		_timer?.Stop();
+		Config.Error = false;
 
-		_value = Config.Type switch
+		try
 		{
-			NumericType.Int => int.TryParse(val.Value?.ToString(), out int _value),
-			NumericType.Decimal => decimal.TryParse(val.Value?.ToString(), out decimal _value),
-			NumericType.Double => double.TryParse(val.Value?.ToString(), out double _value),
-			NumericType.Long => long.TryParse(val.Value?.ToString(), out long _value),
-			_ => throw new Exception("Input is not a numeric type.")
-		};
+			object value = Config.Type switch
+			{
+				NumericType.Int => int.Parse(val.Value?.ToString()),
+				NumericType.Decimal => decimal.Parse(val.Value?.ToString()),
+				NumericType.Double => double.Parse(val.Value?.ToString()),
+				NumericType.Long => long.Parse(val.Value?.ToString())
+			};
+
+			_value = value;
+		}
+		catch(Exception ex)
+		{
+			_value = "";
+			Config.Error = true;
+			_error = ex.Message;
+		}
 
 		setError();
 

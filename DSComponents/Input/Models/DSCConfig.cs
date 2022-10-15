@@ -1,4 +1,4 @@
-﻿using DSComponents.Input.Enums;
+﻿using DSComponents.Enums;
 using System.Collections.Generic;
 
 namespace DSComponents.Input.Models
