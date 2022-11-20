@@ -1,0 +1,60 @@
+﻿.dscselect-select {
+    border-style: solid;
+    border-radius: 0.25rem;
+    border-width: 1px;
+    border-color: rgb(0, 0, 0);
+    width: 100%;
+    min-height: 30px;
+}
+
+.dscselect-select .dscselect-content {
+    display: flex;
+}
+
+.dscselect-select .dscselect-content span{
+    width: 100%;
+    margin: 0;
+    padding: 0 0.5rem;
+}
+
+.dscselect-select-menu {
+    position: relative;
+    width: 100%;
+    max-height: 300px;
+    border-radius: 0.25rem;
+    z-index: 1000;
+}
+
+.dscselect-select-menu ul {
+    position: absolute;
+    width: inherit;
+    list-style: none;
+    padding: 0;
+    box-shadow: 0px 5px 5px 3px rgba(0, 0, 0, 0.5);
+}
+
+.empty-list{
+    padding: 1rem;
+    text-align: center;
+    font-weight: bold;
+}
+
+.chevron {
+    margin: auto;
+    padding: 5%;
+    background-repeat: no-repeat;
+}
+
+.chevron-up {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" class="bi bi-chevron-up bg-danger" viewBox="0 0 16 16"> <path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"/> </svg>')
+}
+
+.chevron-down {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" class="bi bi-chevron-down" viewBox="0 0 16 16"> <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/> </svg>');
+}
+
+.error {
+    color: rgb(155, 0, 0);
+    border-color: rgb(155, 0, 0);
+    box-shadow: 2px 2px 5px rgba(155, 0, 0, 0.5);
+}

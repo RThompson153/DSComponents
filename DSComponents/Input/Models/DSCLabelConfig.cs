@@ -1,11 +1,10 @@
-﻿using DSComponents.Input.Enums;
+﻿using DSComponents.Enums;
 
 namespace DSComponents.Input.Models
 {
 	public class DSCLabelConfig
 	{
 		public string Label { get; set; }
-		public LabelPosition Position { get; set; }
-		public string Color { get; set; }
+		public Position Position { get; set; }
 	}
 }

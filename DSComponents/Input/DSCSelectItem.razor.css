@@ -1,0 +1,8 @@
+﻿.dscselect-select-menu ul li{
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+.selected {
+    background-color: rgba(0, 0, 0, 0.5);
+}

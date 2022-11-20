@@ -1,0 +1,46 @@
+﻿@using DSComponents.Input.Models
+@inject IDSCService DSCService
+
+<li class="@((_selected) ? "selected" : "")" @onclick="selectItem">@Value</li>
+
+@code {
+    [CascadingParameter]
+    protected DSCConfig Config { get; set; }
+    [Parameter]
+    public object Value { get; set; }
+
+    [Parameter]
+    public EventCallback? SelectCallback { get; set; }
+
+    private bool _selected;
+
+    protected override void OnParametersSet()
+    {
+        if (Config.SelectValues.Contains(Value) == true)
+            _selected = true;
+
+        base.OnParametersSet();
+    }
+
+    private void selectItem()
+    {
+        _selected = !_selected;
+
+        if (!Config.Multiple)
+            Config.SelectValues = new List<object>();
+
+        if (_selected && !Config.SelectValues.Contains(Value))
+            Config.SelectValues.Add(Value);
+        else
+            Config.SelectValues.Remove(Value);
+
+        if(Config.SelectValues.Count() > Config.Maximum)
+        {
+            Config.SelectValues.Remove(Value);
+            _selected = false;
+        }
+
+        if (SelectCallback is not null)
+            SelectCallback?.InvokeAsync();
+    }
+}

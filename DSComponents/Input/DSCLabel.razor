@@ -1,64 +1,40 @@
-﻿@using DSComponents.Input.Enums
+﻿@using DSComponents.Enums
 @using DSComponents.Input.Models
 
-@switch(Options.Label.Position)
+@if(Config != null)
 {
-	case LabelPosition.Top:
-	case LabelPosition.Bottom:
-		<label class="col-12 m-0 p-0 text-center @Options.Label.Color @((Options.Error) ? "error" : "")" for="@Options.Name">@Options.Label.Label</label>
-		break;
-	case LabelPosition.TopRight:
-	case LabelPosition.BottomRight:
-		<label class="col-12 m-0 p-0 text-right @Options.Label.Color @((Options.Error) ? "error" : "")" for="@Options.Name">@Options.Label.Label</label>
-		break;
-	case LabelPosition.InlineTop:
-		<div class="label-inline top col-12 d-flex m-0">
-			<label class="d-flex mx-auto @Options.Label.Color @((!string.IsNullOrEmpty(Options.BackgroundColor)) ? Options.BackgroundColor : "default-background") @((Options.Error) ? "error" : "")" for="@Options.Name">
-				<span class="px-1">@Options.Label.Label</span>
-			</label>
-		</div>
-		break;
-	case LabelPosition.InlineBottom:
-		<div class="label-inline bottom col-12 d-flex m-0">
-			<label class="d-flex mx-auto @Options.Label.Color @((!string.IsNullOrEmpty(Options.BackgroundColor)) ? Options.BackgroundColor : "default-background") @((Options.Error) ? "error" : "")" for="@Options.Name">
-				<span class="px-1">@Options.Label.Label</span>
-			</label>
-		</div>
-		break;
-	case LabelPosition.InlineTopLeft:
-		<div class="label-inline top left m-0">
-			<label class="d-flex mx-auto @Options.Label.Color @((!string.IsNullOrEmpty(Options.BackgroundColor)) ? Options.BackgroundColor : "default-background") @((Options.Error) ? "error" : "")" for="@Options.Name">
-				<span class="px-1">@Options.Label.Label</span>
-			</label>
-		</div>
-		break;
-	case LabelPosition.InlineTopRight:
-		<div class="label-inline top right m-0">
-			<label class="d-flex mx-auto @Options.Label.Color @((!string.IsNullOrEmpty(Options.BackgroundColor)) ? Options.BackgroundColor : "default-background") @((Options.Error) ? "error" : "")" for="@Options..Name">
-				<span class="px-1">@Options.Label.Label</span>
-			</label>
-		</div>
-		break;
-	case LabelPosition.InlineBottomLeft:
-		<div class="label-inline bottom left m-0">
-			<label class="d-flex mx-auto @Options.Label.Color @((!string.IsNullOrEmpty(Options.BackgroundColor)) ? Options.BackgroundColor : "default-background") @((Options.Error) ? "error" : "")" for="@Options.Name">
-				<span class="px-1">@Options.Label.Label</span>
-			</label>
-		</div>
-		break;
-	case LabelPosition.InlineBottomRight:
-		<div class="label-inline bottom right m-0">
-			<label class="d-flex mx-auto @Options.Label.Color @((!string.IsNullOrEmpty(Options.BackgroundColor)) ? Options.BackgroundColor : "default-background") @((Options.Error) ? "error" : "")" for="@Options.Name">
-				<span class="px-1">@Options.Label.Label</span>
-			</label>
-		</div>
-		break;
-	default:
-		<label class="col-12 m-0 p-0 @Options.Label.Color @((Options.Error) ? "error" : "")" for="@Options.Name">@Options.Label.Label</label>
-		break;
+	@switch(Config.Position)
+	{
+		case Position.InlineTop:
+			<div class="center top">
+				<div class="label-inline @TextColor @BGColor">
+					<span class="label">@Config.Label</span>
+				</div>
+			</div>
+			break;
+		case Position.InlineTopLeft:
+			<div class="top left">
+				<div class="label-inline @TextColor @BGColor">
+					<span class="label">@Config.Label</span>
+				</div>
+			</div>
+			break;
+		case Position.InlineTopRight:
+			<div class="top right">
+				<div class="label-inline @TextColor @BGColor">
+					<span class="label">@Config.Label</span>
+				</div>
+			</div>
+			break;
+	}
 }
 
 @code {
 	[Parameter]
-	public DSCInputConfig Options { get; set; }
+	public DSCLabelConfig Config { get; set; }
+	[Parameter]
+	public string TextColor { get; set; }
+
+	[Parameter]
+	public string BGColor { get; set; }
 }

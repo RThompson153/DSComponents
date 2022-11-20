@@ -5,9 +5,8 @@ namespace DSComponents
 {
 	public interface IDSCService
 	{
-		public IEnumerable<DSCInputConfig> DSCInputConfigs { get; set; }
+        public IEnumerable<DSCConfig> DSCInputConfigs { get; set; }
 
-		public void ToggleDropdown(bool expanded, DSCInputConfig item);
-		public void CloseDropdowns();
-	}
+        public void CloseDropdowns();
+    }
 }

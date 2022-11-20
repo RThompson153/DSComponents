@@ -1,81 +1,110 @@
 ﻿@using System.Timers
-@using DSComponents.Input.Enums
+@using DSComponents.Enums
 @using DSComponents.Input.Models
+@using System.Text.RegularExpressions
+@inject IDSCService DSCService
 
-@switch(Options.Label.Position)
-{
-	case LabelPosition.Top:
-	case LabelPosition.TopLeft:
-	case LabelPosition.TopRight:
-	case LabelPosition.InlineTop:
-	case LabelPosition.InlineTopLeft:
-	case LabelPosition.InlineTopRight:
-		<LabelComponent Options="@Options" />
-		break;
-}
+<div class="dscnumber" @onclick:stopPropagation>
+	<CascadingValue Value="@Config">
+		<div class="dscnumber-number @Config.TextColor @_bg @((Config.Error) ? "error" : "")">
+			@if(!HideLabel)
+			{
+				<DSCLabel Config="@Config.Label" TextColor="@Config.TextColor" BGColor="@_bg" />
+			}
 
-<input type="number" class="col-12 rounded @Options.TextColor @Options.BackgroundColor @((Options.Error) ? "error" : "")" value="@_value" name="@Options.Name" min="@Options.MinLength" max="@Options.MaxLength" @oninput="onChange" @onfocus="onFocus" @onblur="onBlur" />
+			<input type="number" class="dscnumber-content @((HideSpin) ? "hide-spin" : "")" placeholder="@Config.Placeholder" name="@Config.Name" value="@_value" min="@Config.Minimum" maxlength="@Config.Maximum" @onchange="onInput" @oninput="onInput" @onfocusin="onFocusIn" disabled="@Config.Disabled" />
+			
+		</div>
+	</CascadingValue>
+</div>
 
-@switch(Options.Label.Position)
-{
-	case LabelPosition.Bottom:
-	case LabelPosition.BottomLeft:
-	case LabelPosition.BottomRight:
-	case LabelPosition.InlineBottom:
-	case LabelPosition.InlineBottomLeft:
-	case LabelPosition.InlineBottomRight:
-		<LabelComponent Options="@Options" />
-		break;
-}
-
-@code {
+@code{
 	[Parameter]
-	public DSCInputConfig Options { get; set; }
+	public DSCConfig Config { get; set; }
 	[Parameter]
-	public EventCallback<int> Callback { get; set; }
+	public bool HideLabel { get; set; }
+	[Parameter]
+	public bool HideSpin { get; set; }
+	[Parameter]
+	public EventCallback<object> OnInput { get; set; }
 
-	private int _value;
-	private Timer? _timer;
+	private Timer _timer;
+	private object _value;
+	private string _bg, _error;
+
+	protected override void OnInitialized()
+	{
+		if(Config.Timeout is not null && !OnInput.HasDelegate)
+			throw new Exception("A timeout call back is required when providing a timeout value.");
+
+		base.OnInitialized();
+	}
 
 	protected override void OnParametersSet()
 	{
-		tryParseInt(Options.Value.ToString());
+		var configs = DSCService.DSCInputConfigs.ToList();
 
-		if(Options.Timeout is not null)
+		if (!configs.Contains(Config))
+			configs.Add(Config);
+
+		DSCService.DSCInputConfigs = configs;
+
+		if(Config.Timeout is not null)
 		{
 			_timer = new Timer();
-			_timer.Interval = Options.Timeout.GetValueOrDefault();
-			_timer.Elapsed += (x, y) => Callback.InvokeAsync(_value);
+			_timer.Interval = Config.Timeout.GetValueOrDefault();
+			_timer.Elapsed += (x, y) => timeout();
 			_timer.AutoReset = false;
 		}
+
+		_bg = (Config.Disabled)
+			? "disabled"
+			: Config.BackgroundColor;
+
+		Config.Minimum = Config.Minimum ?? 0;
+		Config.Maximum = Config.Maximum ?? 524288;
 
 		base.OnParametersSet();
 	}
 
-	private void onChange(ChangeEventArgs val)
+	private void onInput(ChangeEventArgs val)
 	{
-		tryParseInt(val.Value.ToString());
+		_timer?.Stop();
+		Config.Error = false;
+
+		try
+		{
+			object value = Config.Type switch
+			{
+				NumericType.Int => int.Parse(val.Value?.ToString()),
+				NumericType.Decimal => decimal.Parse(val.Value?.ToString()),
+				NumericType.Double => double.Parse(val.Value?.ToString()),
+				NumericType.Long => long.Parse(val.Value?.ToString())
+			};
+
+			_value = value;
+		}
+		catch(Exception ex)
+		{
+			_value = "";
+			Config.Error = true;
+			_error = ex.Message;
+		}
 
 		setError();
 
-		if(!Options.Error && _timer is not null)
-		{
-			_timer.Stop();
+		if(_timer is null)
+			OnInput.InvokeAsync(_value);
+		else
 			_timer.Start();
-		}
 	}
 
-	private void tryParseInt(string val)
-	{
-		int.TryParse(val, out int value);
+	private void onFocusIn() => setError();
 
-		_value = value;
-	}
+	private void setError(){ }
 
-	private void onFocus() => setError();
+	//private void setError() => Config.Error = ((Config.Minimum is not null && _value < Config.Minimum) 
+	//	|| (Config.Maximum is not null && _value > Config.Maximum));
 
-	private void onBlur() => Options.Error = false;
-
-	private void setError() => Options.Error = (_value > 0 && (Options.MinLength is not null && _value < Options.MinLength) 
-		|| (Options.MaxLength is not null && _value > Options.MaxLength));
+	private void timeout() => OnInput.InvokeAsync(_value);
 }

@@ -1,77 +1,128 @@
 ﻿@using System.Timers
-@using DSComponents.Input.Enums
+@using DSComponents.Enums
 @using DSComponents.Input.Models
+@using System.Text.RegularExpressions
+@inject IDSCService DSCService
 
+<div class="dsctext" @onclick:stopPropagation>
+	<CascadingValue Value="@Config">
+		<div class="dsctext-text @Config.TextColor @_bg @((Config.Error) ? "error" : "")">
+			@if(!HideLabel)
+			{
+				<DSCLabel Config="@Config.Label" TextColor="@Config.TextColor" BGColor="@_bg" />
+			}
 
-@switch(Options.Label.Position)
-{
-	case LabelPosition.Top:
-	case LabelPosition.TopLeft:
-	case LabelPosition.TopRight:
-	case LabelPosition.InlineTop:
-	case LabelPosition.InlineTopLeft:
-	case LabelPosition.InlineTopRight:
-		<DSCLabel Options="@Options" />
-		break;
-}
+			<input type="text" class="dsctext-content" placeholder="@Config.Placeholder" name="@Config.Name" value="@_value" min="@Config.Minimum" maxlength="@Config.Maximum" @oninput="onInput" @onkeyup="onKeyup" @onfocusin="onFocusIn" disabled="@Config.Disabled" />
+			
+		</div>
+		@*@if(!string.IsNullOrEmpty(_error))
+		{
+			<span class="error">! @_error</span>
+		}*@
+	</CascadingValue>
+</div>
 
-<input type="text" class="col-12 rounded @Options.TextColor @Options.BackgroundColor @Options.TextColor @((Options.Error) ? "error" : "")" value="@_value" name="@Options.Name" maxlength="@Options.MaxLength" @oninput="onInput" @onfocus="onFocus" @onblur="onBlur" />
-
-@switch(Options.Label.Position)
-{
-	case LabelPosition.Bottom:
-	case LabelPosition.BottomLeft:
-	case LabelPosition.BottomRight:
-	case LabelPosition.InlineBottom:
-	case LabelPosition.InlineBottomLeft:
-	case LabelPosition.InlineBottomRight:
-		<DSCLabel Options="@Options" />
-		break;
-}
-
-@code {
+@code{
 	[Parameter]
-	public DSCInputConfig Options { get; set; }
+	public DSCConfig Config { get; set; }
 	[Parameter]
-	public EventCallback<string> Callback { get; set; }
+	public bool HideLabel { get; set; }
+	[Parameter]
+	public IgnorePattern Ignore { get; set; }
+	[Parameter]
+	public string Pattern { get; set; }
+	[Parameter]
+	public EventCallback<string> OnInput { get; set; }
 
-	private string _value;
-	private Timer? _timer;
+	private Timer _timer;
+	private string _bg, _value, _pattern, _error;
+
+	protected override void OnInitialized()
+	{
+		if(Config.Timeout is not null && !OnInput.HasDelegate)
+			throw new Exception("A timeout call back is required when providing a timeout value.");
+
+		if (Ignore == IgnorePattern.Custom && Pattern is null)
+			throw new Exception("A pattern must be provided to ignore a custom character set.");
+
+		base.OnInitialized();
+	}
 
 	protected override void OnParametersSet()
 	{
-		_value = Options.Value.ToString();
+		var configs = DSCService.DSCInputConfigs.ToList();
 
-		if(Options.Timeout is not null)
+		if (!configs.Contains(Config))
+			configs.Add(Config);
+
+		DSCService.DSCInputConfigs = configs;
+
+		_pattern = Ignore switch
+		{
+			IgnorePattern.Alpha => "[a-zA-Z]+",
+			IgnorePattern.Numeric => "[0-9]+",
+			IgnorePattern.AlphaNumeric => "[a-zA-Z0-9]+",
+			IgnorePattern.Special => "[^a-zA-Z0-9]+",
+			IgnorePattern.Custom => Pattern
+		};
+
+		if(Config.Timeout is not null)
 		{
 			_timer = new Timer();
-			_timer.Interval = Options.Timeout.GetValueOrDefault();
-			_timer.Elapsed += (x, y) => Callback.InvokeAsync(_value);
+			_timer.Interval = Config.Timeout.GetValueOrDefault();
+			_timer.Elapsed += (x, y) => timeout();
 			_timer.AutoReset = false;
 		}
+
+		_bg = (Config.Disabled)
+			? "disabled"
+			: Config.BackgroundColor;
+
+		Config.Minimum = Config.Minimum ?? 0;
+		Config.Maximum = Config.Maximum ?? 524288;
 
 		base.OnParametersSet();
 	}
 
 	private void onInput(ChangeEventArgs val)
 	{
+		_timer?.Stop();
+
 		_value = val.Value.ToString();
+
+		var match = Regex.IsMatch(_value, _pattern);
+
+		if(match)
+		{
+			_error = Ignore switch
+			{
+				IgnorePattern.Alpha => "Alpha characters are not allowed.",
+				IgnorePattern.Numeric => "Numeric characters are not allowed.",
+				IgnorePattern.AlphaNumeric => "Alpha and Numeric characters are not allowed.",
+				IgnorePattern.Special => "Special characters and symbols are not allowed.",
+				IgnorePattern.Custom => ""
+			};
+
+			Config.Error = true;
+		}
+	}
+
+	private void onKeyup(KeyboardEventArgs e)
+	{
+		_value = Regex.Replace(_value, _pattern, "");
 
 		setError();
 
-		if(!Options.Error && _timer is not null)
-		{
-			_timer.Stop();
+		if(_timer is null)
+			OnInput.InvokeAsync(_value);
+		else
 			_timer.Start();
-		}
-
-		Callback.InvokeAsync(_value);
 	}
 
-	private void onFocus() => setError();
+	private void onFocusIn() => setError();
 
-	private void onBlur() => Options.Error = false;
+	private void setError() => Config.Error = ((Config.Minimum is not null && _value?.Length < Config.Minimum) 
+		|| (Config.Maximum is not null && _value?.Length > Config.Maximum));
 
-	private void setError() => Options.Error = (!string.IsNullOrEmpty(_value) && (Options.MinLength is not null && _value.Length < Options.MinLength) 
-		|| (Options.MaxLength is not null && _value.Length > Options.MaxLength));
+	private void timeout() => OnInput.InvokeAsync(_value);
 }
