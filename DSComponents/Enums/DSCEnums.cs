@@ -1,4 +1,4 @@
-﻿namespace DSComponents.Input.Enums
+﻿namespace DSComponents.Enums
 {
 	public enum Position
 	{

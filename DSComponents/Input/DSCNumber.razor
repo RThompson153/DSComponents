@@ -1,9 +1,8 @@
 ﻿@using System.Timers
-@using DSComponents.Input.Enums
+@using DSComponents.Enums
 @using DSComponents.Input.Models
 @using System.Text.RegularExpressions
 @inject IDSCService DSCService
-@typeparam T
 
 <div class="dscnumber" @onclick:stopPropagation>
 	<CascadingValue Value="@Config">
@@ -13,13 +12,9 @@
 				<DSCLabel Config="@Config.Label" TextColor="@Config.TextColor" BGColor="@_bg" />
 			}
 
-			<input type="number" class="dscnumber-content" placeholder="@Config.Placeholder" name="@Config.Name" value="@_value" min="@Config.Minimum" maxlength="@Config.Maximum" @onchange="onInput" @onfocusin="onFocusIn" disabled="@Config.Disabled" />
+			<input type="number" class="dscnumber-content @((HideSpin) ? "hide-spin" : "")" placeholder="@Config.Placeholder" name="@Config.Name" value="@_value" min="@Config.Minimum" maxlength="@Config.Maximum" @onchange="onInput" @oninput="onInput" @onfocusin="onFocusIn" disabled="@Config.Disabled" />
 			
 		</div>
-		@*@if(!string.IsNullOrEmpty(_error))
-		{
-			<span class="error">! @_error</span>
-		}*@
 	</CascadingValue>
 </div>
 
@@ -29,14 +24,13 @@
 	[Parameter]
 	public bool HideLabel { get; set; }
 	[Parameter]
-	public IgnorePattern Ignore { get; set; }
-	[Parameter]
-	public string Pattern { get; set; }
+	public bool HideSpin { get; set; }
 	[Parameter]
 	public EventCallback<object> OnInput { get; set; }
 
 	private Timer _timer;
-	private string _bg, _value, _pattern, _error;
+	private object _value;
+	private string _bg, _error;
 
 	protected override void OnInitialized()
 	{
@@ -76,8 +70,26 @@
 	private void onInput(ChangeEventArgs val)
 	{
 		_timer?.Stop();
+		Config.Error = false;
 
-		_value = val.Value.ToString();
+		try
+		{
+			object value = Config.Type switch
+			{
+				NumericType.Int => int.Parse(val.Value?.ToString()),
+				NumericType.Decimal => decimal.Parse(val.Value?.ToString()),
+				NumericType.Double => double.Parse(val.Value?.ToString()),
+				NumericType.Long => long.Parse(val.Value?.ToString())
+			};
+
+			_value = value;
+		}
+		catch(Exception ex)
+		{
+			_value = "";
+			Config.Error = true;
+			_error = ex.Message;
+		}
 
 		setError();
 

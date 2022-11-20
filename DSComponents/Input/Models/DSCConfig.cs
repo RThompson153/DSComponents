@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using DSComponents.Enums;
+using System.Collections.Generic;
 
 namespace DSComponents.Input.Models
 {
@@ -42,6 +43,9 @@ namespace DSComponents.Input.Models
 		
 		[DSCConfigAttribute("object", "The collection of selectable items.", true)]
 		public List<object> SelectItems { get; set; }
+
+		[DSCConfigAttribute("NumericType", "Type a numerical value needs to be parsed to.", false)]
+		public NumericType Type { get; set; }
 
 		public bool Error { get; set; }
 		public List<object> SelectValues { get; set; } = new();
