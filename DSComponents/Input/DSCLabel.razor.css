@@ -31,7 +31,3 @@
     transform: translateY(-0.6rem);
     font-size: 0.8rem;
 }
-
-.disabled {
-    background-color: rgb(150, 150, 150);
-}

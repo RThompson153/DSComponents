@@ -39,10 +39,6 @@
     font-weight: bold;
 }
 
-.disabled {
-    background-color: rgb(150, 150, 150);
-}
-
 .chevron {
     margin: auto;
     padding: 5%;
