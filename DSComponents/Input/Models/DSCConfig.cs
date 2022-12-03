@@ -29,12 +29,6 @@ namespace DSComponents.Input.Models
 		[DSCConfigAttribute("bool", "If true, the items can be searched and filtered.", false)]
 		public bool Searchable { get; set; }
 		
-		[DSCConfigAttribute("string", "CSS class for the component text color. Bootstrap classes are supported.", false)]
-		public string TextColor { get; set; } = "text-dark";
-		
-		[DSCConfigAttribute("string", "CSS class for the component background color. Bootstrap classes are supported.", false)]
-		public string BackgroundColor { get; set; } = "bg-white";
-		
 		[DSCConfigAttribute("bool", "Expanded state.", false)]
 		public bool Expanded { get; set; }
 		
@@ -45,7 +39,7 @@ namespace DSComponents.Input.Models
 		public List<object> SelectItems { get; set; }
 
 		[DSCConfigAttribute("NumericType", "Type a numerical value needs to be parsed to.", false)]
-		public NumericType Type { get; set; }
+		public NumericType? Type { get; set; } = null;
 
 		public bool Error { get; set; }
 		public List<object> SelectValues { get; set; } = new();

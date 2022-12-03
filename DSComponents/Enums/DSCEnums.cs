@@ -7,7 +7,7 @@
 
 	public enum IgnorePattern
 	{
-		Alpha, Numeric, AlphaNumeric, Special, Custom
+		None, Alpha, Numeric, AlphaNumeric, Special, Custom
 	}
 
 	public enum NumericType

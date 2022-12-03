@@ -17,9 +17,3 @@
 .dsctext-content:focus {
 	outline: none;
 }
-
-.error {
-	color: rgb(155, 0, 0);
-	border-color: rgb(155, 0, 0);
-	box-shadow: 2px 2px 5px rgba(155, 0, 0, 0.5);
-}

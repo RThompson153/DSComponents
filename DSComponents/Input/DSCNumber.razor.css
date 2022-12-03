@@ -18,12 +18,6 @@
 	outline: none;
 }
 
-.error {
-	color: rgb(155, 0, 0);
-	border-color: rgb(155, 0, 0);
-	box-shadow: 2px 2px 5px rgba(155, 0, 0, 0.5);
-}
-
 input.hide-spin::-webkit-outer-spin-button,
 input.hide-spin::-webkit-inner-spin-button {
 	-webkit-appearance: none;

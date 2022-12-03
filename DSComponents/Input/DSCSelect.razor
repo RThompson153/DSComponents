@@ -6,11 +6,18 @@
 
 <div class="dscselect" @onclick:stopPropagation>
 	<CascadingValue Value="@Config">
-		<div class="dscselect-select @Config.TextColor @_bg @((Config.Error) ? "error" : "")" @onclick="toggleSelectMenu">
-			<DSCLabel Config="@Config.Label" TextColor="@Config.TextColor" BGColor="@_bg" />
+		<div class="dscselect-select dsc-text @_bg @((Config.Error) ? "error" : "")" @onclick="toggleSelectMenu">
+			@if(!HideLabel)
+			{
+				<DSCLabel Config="@Config.Label" Disabled="@Config.Disabled" />
+			}
 
-			<div class="dscselect-content">
-				<span class="">@(string.Join(",", Config.SelectValues))</span>
+			<div class="dscselect-content-wrapper">
+				<div class="dscselect-content">
+					<span class="dsc-content-items">@(string.Join(",", Config.SelectValues))</span>
+				
+				</div>
+
 				<i class="chevron chevron-@((_expanded) ? "up" : "down")"></i>
 			</div>
 			
@@ -19,7 +26,7 @@
 		@if(_expanded)
 		{
 			<div class="dscselect-select-menu" @onclick="selectItem">
-				<ul class="@Config.TextColor @_bg">
+				<ul class="dsc-text @_bg">
 					@if(Config.Searchable)
 					{
 						<div class="dscselect-search" @onclick:stopPropagation>
@@ -44,7 +51,8 @@
 @code {
 	[Parameter]
 	public DSCConfig Config { get; set; }
-
+	[Parameter]
+	public bool HideLabel { get; set; }
 	[Parameter]
 	public bool Expanded 
 	{
@@ -85,7 +93,7 @@
 
 		_bg = (Config.Disabled)
 			? "disabled"
-			: Config.BackgroundColor;
+			: "dsc-background";
 
 		Config.Minimum = Config.Minimum ?? 0;
 		Config.Maximum = Config.Maximum ?? Config.SelectItems.Count();

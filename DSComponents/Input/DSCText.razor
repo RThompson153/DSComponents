@@ -6,13 +6,13 @@
 
 <div class="dsctext" @onclick:stopPropagation>
 	<CascadingValue Value="@Config">
-		<div class="dsctext-text @Config.TextColor @_bg @((Config.Error) ? "error" : "")">
+		<div class="dsctext-text dsc-text @_bg @((Config.Error) ? "error" : "")">
 			@if(!HideLabel)
 			{
-				<DSCLabel Config="@Config.Label" TextColor="@Config.TextColor" BGColor="@_bg" />
+				<DSCLabel Config="@Config.Label" Disabled="@Config.Disabled" />
 			}
 
-			<input type="text" class="dsctext-content" placeholder="@Config.Placeholder" name="@Config.Name" value="@_value" min="@Config.Minimum" maxlength="@Config.Maximum" @oninput="onInput" @onkeyup="onKeyup" @onfocusin="onFocusIn" disabled="@Config.Disabled" />
+			<input type="text" class="dsctext-content" placeholder="@Config.Placeholder" name="@Config.Name" value="@_value" min="@Config.Minimum" maxlength="@Config.Maximum" @oninput="onInput" @onkeyup="onKeyup" disabled="@Config.Disabled" />
 			
 		</div>
 		@*@if(!string.IsNullOrEmpty(_error))
@@ -50,20 +50,14 @@
 
 	protected override void OnParametersSet()
 	{
-		var configs = DSCService.DSCInputConfigs.ToList();
-
-		if (!configs.Contains(Config))
-			configs.Add(Config);
-
-		DSCService.DSCInputConfigs = configs;
-
 		_pattern = Ignore switch
 		{
 			IgnorePattern.Alpha => "[a-zA-Z]+",
 			IgnorePattern.Numeric => "[0-9]+",
 			IgnorePattern.AlphaNumeric => "[a-zA-Z0-9]+",
 			IgnorePattern.Special => "[^a-zA-Z0-9]+",
-			IgnorePattern.Custom => Pattern
+			IgnorePattern.Custom => Pattern,
+			_ => ""
 		};
 
 		if(Config.Timeout is not null)
@@ -76,7 +70,7 @@
 
 		_bg = (Config.Disabled)
 			? "disabled"
-			: Config.BackgroundColor;
+			: "dsc-background";
 
 		Config.Minimum = Config.Minimum ?? 0;
 		Config.Maximum = Config.Maximum ?? 524288;
@@ -92,6 +86,8 @@
 
 		var match = Regex.IsMatch(_value, _pattern);
 
+		Config.Error = false;
+
 		if(match)
 		{
 			_error = Ignore switch
@@ -100,7 +96,8 @@
 				IgnorePattern.Numeric => "Numeric characters are not allowed.",
 				IgnorePattern.AlphaNumeric => "Alpha and Numeric characters are not allowed.",
 				IgnorePattern.Special => "Special characters and symbols are not allowed.",
-				IgnorePattern.Custom => ""
+				IgnorePattern.Custom => "",
+				_ => ""
 			};
 
 			Config.Error = true;
@@ -111,7 +108,8 @@
 	{
 		_value = Regex.Replace(_value, _pattern, "");
 
-		setError();
+		if(!Config.Error)
+			checkError();
 
 		if(_timer is null)
 			OnInput.InvokeAsync(_value);
@@ -119,9 +117,9 @@
 			_timer.Start();
 	}
 
-	private void onFocusIn() => setError();
+	private void onFocusIn() => checkError();
 
-	private void setError() => Config.Error = ((Config.Minimum is not null && _value?.Length < Config.Minimum) 
+	private void checkError() => Config.Error = ((Config.Minimum is not null && _value?.Length < Config.Minimum) 
 		|| (Config.Maximum is not null && _value?.Length > Config.Maximum));
 
 	private void timeout() => OnInput.InvokeAsync(_value);
