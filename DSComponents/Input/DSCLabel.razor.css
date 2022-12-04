@@ -12,9 +12,11 @@
     flex: 0 0 auto;
 }
 
-.left{
+.left {
+    margin-right: auto;
     padding-left: 0.25rem;
 }
+
 
 .right {
     padding-right: 0.25rem;

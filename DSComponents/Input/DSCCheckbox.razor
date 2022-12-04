@@ -1,0 +1,70 @@
+﻿@using DSComponents.Enums
+@using DSComponents.Input.Models
+
+<div class="dsccheckbox" @onclick:stopPropagation>
+	<CascadingValue Value="@Config">
+		<div class="dsccheckbox-checkbox @((Config.Error) ? "error" : "")">
+			@switch(Config.CheckboxType)
+			{
+				case CheckboxType.Switch:
+					break;
+				default:
+					<DSCLabel Config="@Config.Label" />
+					<div class="checkbox @_bg" name="@Config.Name" @onclick="onCheck">
+						<div class="dsccheckbox-checkmark @((_checked) ? "checked" : "")"></div>
+					</div>
+					break;
+			}
+		</div>
+	</CascadingValue>
+</div>
+
+@code {
+	/// <summary>
+	/// Configuration class for the checkbox component
+	/// </summary>
+	[Parameter]
+	public DSCConfig Config { get; set; }
+	/// <summary>
+	/// Callback event for UI interaction
+	/// </summary>
+	[Parameter]
+	public EventCallback<bool> CheckedCallback { get; set; }
+
+	private string _bg;
+	private bool _checked;
+
+	protected override void OnInitialized()
+	{
+		@switch(Config.Label.Position)
+		{
+			case Position.InlineTop:
+			case Position.InlineTopLeft:
+			case Position.InlineTopRight:
+			case Position.TopLeft:
+			case Position.TopRight:
+				throw new Exception($"The label position {Config.Label.Position} is not valid for this component type.");
+				break;
+		}
+		base.OnInitialized();
+	}
+
+	protected override void OnParametersSet()
+	{
+		_bg = (Config.Disabled)
+			? "disabled"
+			: "dsc-background";
+
+		base.OnParametersSet();
+	}
+
+	private void onCheck()
+	{
+		if (Config.Disabled)
+			return;
+
+		_checked = !_checked;
+
+		CheckedCallback.InvokeAsync(_checked);
+	}
+}
