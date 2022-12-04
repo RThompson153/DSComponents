@@ -74,7 +74,7 @@
 
 		try
 		{
-			object value = Config.Type switch
+			object value = Config.NumericType switch
 			{
 				NumericType.Int => int.Parse(val.Value?.ToString()),
 				NumericType.Decimal => decimal.Parse(val.Value?.ToString()),

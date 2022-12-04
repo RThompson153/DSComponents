@@ -2,7 +2,7 @@
 {
 	public enum Position
 	{
-		Top, Left, Right, Bottom, TopLeft, TopRight, InlineTop, InlineTopLeft, InlineTopRight
+		Top, Left, Right, InlineTop, InlineTopLeft, InlineTopRight
 	}
 
 	public enum IgnorePattern
@@ -13,5 +13,10 @@
 	public enum NumericType
 	{
 		Int, Double, Decimal, Long
+	}
+
+	public enum CheckboxType
+	{
+		Default, Switch
 	}
 }

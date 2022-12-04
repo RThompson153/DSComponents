@@ -39,7 +39,9 @@ namespace DSComponents.Input.Models
 		public List<object> SelectItems { get; set; }
 
 		[DSCConfigAttribute("NumericType", "Type a numerical value needs to be parsed to.", false)]
-		public NumericType? Type { get; set; } = null;
+		public NumericType NumericType { get; set; }
+		[DSCConfigAttribute("CheckboxType", "Type of a checkbox.", false)]
+		public CheckboxType CheckboxType {get;set;}
 
 		public bool Error { get; set; }
 		public List<object> SelectValues { get; set; } = new();
