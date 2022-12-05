@@ -14,20 +14,25 @@
 
 .left {
     margin-right: 1rem;
+}
+
+.left, .inline-left{
     padding-left: 0.25rem;
 }
 
+.right, .inline-right{
+padding-right: 0.25rem;
+}
 
 .right {
     margin-left: 1rem;
-    padding-right: 0.25rem;
 }
 
-.right.inline{
+.inline-right {
     justify-content: right;
 }
 
-.center {
+.inline-center {
     justify-content: center;
 }
 

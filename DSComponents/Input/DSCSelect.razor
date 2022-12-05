@@ -6,8 +6,65 @@
 
 <div class="dscselect" @onclick:stopPropagation>
 	<CascadingValue Value="@Config">
-		<div class="dscselect-select dsc-text @_bg @((Config.Error) ? "error" : "")" @onclick="toggleSelectMenu">
-			@if(!HideLabel && Config.Label.Position != Position.Right)
+		@switch(Config.Label.Position)
+		{
+			case Position.Top:
+			case Position.Left:
+				@if(!HideLabel)
+				{
+					<DSCLabel Config="@Config.Label" Disabled="@Config.Disabled" />
+				}
+
+				<div class="dscselect-select dsc-text @_bg @((Config.Error) ? "error" : "")" @onclick="toggleSelectMenu">
+					<div class="dscselect-content-wrapper">
+						<div class="dscselect-content">
+							<span class="dsc-content-items">@(string.Join(",", Config.SelectValues))</span>
+				
+						</div>
+
+						<i class="chevron chevron-@((_expanded) ? "up" : "down")"></i>
+					</div>
+				</div>
+				break;
+			case Position.Right:
+				<div class="dscselect-select dsc-text @_bg @((Config.Error) ? "error" : "")" @onclick="toggleSelectMenu">
+					<div class="dscselect-content-wrapper">
+						<div class="dscselect-content">
+							<span class="dsc-content-items">@(string.Join(",", Config.SelectValues))</span>
+				
+						</div>
+
+						<i class="chevron chevron-@((_expanded) ? "up" : "down")"></i>
+					</div>
+				</div>
+
+				@if(!HideLabel)
+				{
+					<DSCLabel Config="@Config.Label" Disabled="@Config.Disabled" />
+				}
+				break;
+			case Position.InlineTop:
+			case Position.InlineTopLeft:
+			case Position.InlineTopRight:
+				<div class="dscselect-select dsc-text @_bg @((Config.Error) ? "error" : "")" @onclick="toggleSelectMenu">
+					@if(!HideLabel)
+					{
+						<DSCLabel Config="@Config.Label" Disabled="@Config.Disabled" />
+					}
+
+					<div class="dscselect-content-wrapper">
+						<div class="dscselect-content">
+							<span class="dsc-content-items">@(string.Join(",", Config.SelectValues))</span>
+				
+						</div>
+
+						<i class="chevron chevron-@((_expanded) ? "up" : "down")"></i>
+					</div>
+				</div>
+				break;
+		}
+		@*<div class="dscselect-select dsc-text @_bg @((Config.Error) ? "error" : "")" @onclick="toggleSelectMenu">
+			@if(!HideLabel)
 			{
 				<DSCLabel Config="@Config.Label" Disabled="@Config.Disabled" />
 			}
@@ -25,7 +82,7 @@
 			{
 				<DSCLabel Config="@Config.Label" Disabled="@Config.Disabled" />
 			}
-		</div>
+		</div>*@
 
 		@if(_expanded)
 		{

@@ -1,10 +1,14 @@
-﻿.dscselect-select {
+﻿.dscselect{
+    display: flex;
+}
+
+.dscselect-select {
     border-style: solid;
     border-radius: 0.25rem;
     border-width: 1px;
     border-color: rgb(0, 0, 0);
-    width: 100%;
     min-height: 30px;
+    width: 100%;
 }
 
 .dscselect-select .dscselect-content-wrapper {
