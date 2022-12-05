@@ -4,9 +4,10 @@
 @using DSComponents.Input.Models
 @inject IDSCService DSCService
 
-<div class="dscselect" @onclick:stopPropagation>
-	<CascadingValue Value="@Config">
-		@switch(Config.Label.Position)
+
+<CascadingValue Value="@Config">
+	<div class="dscselect" @onclick:stopPropagation>
+		@switch(Config.Label?.Position)
 		{
 			case Position.Top:
 			case Position.Left:
@@ -63,51 +64,31 @@
 				</div>
 				break;
 		}
-		@*<div class="dscselect-select dsc-text @_bg @((Config.Error) ? "error" : "")" @onclick="toggleSelectMenu">
-			@if(!HideLabel)
-			{
-				<DSCLabel Config="@Config.Label" Disabled="@Config.Disabled" />
-			}
+	</div>
 
-			<div class="dscselect-content-wrapper">
-				<div class="dscselect-content">
-					<span class="dsc-content-items">@(string.Join(",", Config.SelectValues))</span>
-				
-				</div>
+	@if(_expanded)
+	{
+		<div class="dscselect-select-menu" @onclick="selectItem">
+			<ul class="dsc-text @_bg @((Config.Label?.Position == Position.Left) ? "right" : "")">
+				@if(Config.Searchable)
+				{
+					<div class="dscselect-search" @onclick:stopPropagation>
+						<DSCText Config="@Config" HideLabel="true" OnInput="filterItems" />
+					</div>
+				}
 
-				<i class="chevron chevron-@((_expanded) ? "up" : "down")"></i>
-			</div>
-
-			@if(!HideLabel && Config.Label.Position == Position.Right)
-			{
-				<DSCLabel Config="@Config.Label" Disabled="@Config.Disabled" />
-			}
-		</div>*@
-
-		@if(_expanded)
-		{
-			<div class="dscselect-select-menu" @onclick="selectItem">
-				<ul class="dsc-text @_bg">
-					@if(Config.Searchable)
-					{
-						<div class="dscselect-search" @onclick:stopPropagation>
-							<DSCText Config="@Config" HideLabel="true" OnInput="filterItems" />
-						</div>
-					}
-
-					@if(Config.SelectItems.Any())
-					{
-						@ChildContent
-					}
-					else
-					{
-						<h6 class="empty-list">No Items</h6>
-					}
-				</ul>
-			</div>
-		}
-	</CascadingValue>
-</div>
+				@if(Config.SelectItems.Any())
+				{
+					@ChildContent
+				}
+				else
+				{
+					<h6 class="empty-list">No Items</h6>
+				}
+			</ul>
+		</div>
+	}
+</CascadingValue>
 
 @code {
 	[Parameter]

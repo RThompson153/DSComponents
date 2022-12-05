@@ -6,7 +6,7 @@
 
 <div class="dsctext" @onclick:stopPropagation>
 	<CascadingValue Value="@Config">
-		@switch(Config.Label.Position)
+		@switch(Config.Label?.Position)
 		{
 			case Position.Top:
 			case Position.Left:
