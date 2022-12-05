@@ -7,7 +7,7 @@
 <div class="dscselect" @onclick:stopPropagation>
 	<CascadingValue Value="@Config">
 		<div class="dscselect-select dsc-text @_bg @((Config.Error) ? "error" : "")" @onclick="toggleSelectMenu">
-			@if(!HideLabel)
+			@if(!HideLabel && Config.Label.Position != Position.Right)
 			{
 				<DSCLabel Config="@Config.Label" Disabled="@Config.Disabled" />
 			}
@@ -20,7 +20,11 @@
 
 				<i class="chevron chevron-@((_expanded) ? "up" : "down")"></i>
 			</div>
-			
+
+			@if(!HideLabel && Config.Label.Position == Position.Right)
+			{
+				<DSCLabel Config="@Config.Label" Disabled="@Config.Disabled" />
+			}
 		</div>
 
 		@if(_expanded)

@@ -1,5 +1,8 @@
-﻿.dsctext-text {
-	width: 100%;
+﻿.dsctext{
+	display: flex;
+}
+
+.dsctext-text {
 	min-height: 30px;
 	border: 1px solid rgb(100, 100, 100);
 	border-radius: 0.25rem;
@@ -16,4 +19,12 @@
 
 .dsctext-content:focus {
 	outline: none;
+}
+
+.dsc-text {
+	color: initial;
+}
+
+.dsc-background {
+	background-color: initial;
 }

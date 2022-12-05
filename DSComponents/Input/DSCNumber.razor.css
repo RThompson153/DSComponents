@@ -23,3 +23,11 @@ input.hide-spin::-webkit-inner-spin-button {
 	-webkit-appearance: none;
 	margin: 0;
 }
+
+.dsc-text {
+	color: initial;
+}
+
+.dsc-background {
+	background-color: initial;
+}

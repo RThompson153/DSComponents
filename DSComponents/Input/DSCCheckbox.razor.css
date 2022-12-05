@@ -22,3 +22,21 @@
 .dsccheckbox-checkbox .checkbox .dsccheckbox-checkmark.checked::before{
 	content: '\2713';
 }
+
+.dsccheckbox-checkbox .dsccheckbox-switch-track {
+	display: flex;
+	width: 3.5rem;
+	border-radius: 1rem;
+	background-color: rgb(200, 200, 200);
+}
+
+.dsccheckbox-checkbox .dsccheckbox-switch-track .dsccheckbox-switch {
+	width: 45%;
+	height: 100%;
+	border-radius: 50%;
+	border: 1px solid rgb(100, 100, 100);
+}
+
+.dsccheckbox-checkbox .dsccheckbox-switch-track .dsccheckbox-switch.checked{
+	margin-left: auto
+}
