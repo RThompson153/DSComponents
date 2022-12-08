@@ -1,6 +1,6 @@
 ﻿using DSComponents.Enums;
 
-namespace DSComponents.Input.Models
+namespace DSComponents
 {
 	public class DSCLabelConfig
 	{

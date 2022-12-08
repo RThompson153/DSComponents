@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DSComponents.Input.Models
+namespace DSComponents
 {
 	public class DSCConfigAttribute : Attribute
 	{

@@ -1,5 +1,4 @@
-﻿using DSComponents.Input.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace DSComponents
@@ -11,14 +10,6 @@ namespace DSComponents
         {
             get => _dscInputConfigs ?? new List<DSCConfig>();
             set => _dscInputConfigs = value;
-        }
-
-        public void ToggleDropdown(bool expanded, DSCConfig item)
-        {
-            foreach (var dsci in DSCInputConfigs)
-                dsci.Expanded = false;
-
-            item.Expanded = expanded;
         }
 
         public void CloseDropdowns()

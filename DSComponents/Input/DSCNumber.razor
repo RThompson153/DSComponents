@@ -1,6 +1,5 @@
 ﻿@using System.Timers
 @using DSComponents.Enums
-@using DSComponents.Input.Models
 @using System.Text.RegularExpressions
 @inject IDSCService DSCService
 
@@ -38,6 +37,11 @@
 						<DSCLabel Config="@Config.Label" Disabled="@Config.Disabled" />
 					}
 
+					<input type="number" class="dscnumber-content @((HideSpin) ? "hide-spin" : "")" placeholder="@Config.Placeholder" name="@Config.Name" value="@_value" min="@Config.Minimum" maxlength="@Config.Maximum" @onchange="onInput" @oninput="onInput" @onfocusin="onFocusIn" disabled="@Config.Disabled" />
+				</div>
+				break;
+			default:
+				<div class="dscnumber-number dsc-text @_bg @((Config.Error) ? "error" : "")">
 					<input type="number" class="dscnumber-content @((HideSpin) ? "hide-spin" : "")" placeholder="@Config.Placeholder" name="@Config.Name" value="@_value" min="@Config.Minimum" maxlength="@Config.Maximum" @onchange="onInput" @oninput="onInput" @onfocusin="onFocusIn" disabled="@Config.Disabled" />
 				</div>
 				break;

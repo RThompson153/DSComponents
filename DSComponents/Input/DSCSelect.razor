@@ -1,7 +1,6 @@
 ﻿@using System.Linq
 @using DSComponents
 @using DSComponents.Enums
-@using DSComponents.Input.Models
 @inject IDSCService DSCService
 
 
@@ -53,6 +52,18 @@
 						<DSCLabel Config="@Config.Label" Disabled="@Config.Disabled" />
 					}
 
+					<div class="dscselect-content-wrapper">
+						<div class="dscselect-content">
+							<span class="dsc-content-items">@(string.Join(",", Config.SelectValues))</span>
+				
+						</div>
+
+						<i class="chevron chevron-@((_expanded) ? "up" : "down")"></i>
+					</div>
+				</div>
+				break;
+			default:
+				<div class="dscselect-select dsc-text @_bg @((Config.Error) ? "error" : "")" @onclick="toggleSelectMenu">
 					<div class="dscselect-content-wrapper">
 						<div class="dscselect-content">
 							<span class="dsc-content-items">@(string.Join(",", Config.SelectValues))</span>
