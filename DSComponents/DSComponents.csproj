@@ -13,6 +13,13 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Input\Models\**" />
+    <Content Remove="Input\Models\**" />
+    <EmbeddedResource Remove="Input\Models\**" />
+    <None Remove="Input\Models\**" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <SupportedPlatform Include="browser" />
