@@ -2,7 +2,7 @@
 	display: flex;
 }
 
-.checkbox, .dsccheckbox-image .checkbox-image {
+.checkbox, .dsccheckbox-image .checkbox-image, .dsccheckbox-switch-track, .dsccheckbox-switch.checked {
 	margin: auto;
 }
 
@@ -28,7 +28,7 @@
 	background-color: rgb(200, 200, 200);
 }
 
-.dsccheckbox-switch-track .dsccheckbox-switch {
+.dsccheckbox-switch {
 	width: 45%;
 	height: 100%;
 	border-radius: 50%;
@@ -45,17 +45,29 @@
 	background-repeat: no-repeat;
 }
 
-.small{
-	width: 1.25rem;
+.checkbox-icon{
+	display: flex;
+	justify-content: center;
+}
+
+.checkbox-centered-wrapper{
+	width: fit-content;
+}
+
+.small {
+	font-size: 1.25rem;
+	width: 1.25rem; 
 	height: 1.25rem;
 }
 
 .medium {
+	font-size: 2.5rem;
 	width: 2.5rem;
 	height: 2.5rem;
 }
 
 .large {
+	font-size: 3.75rem;
 	width: 3.75rem;
 	height: 3.75rem;
 }
