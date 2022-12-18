@@ -2,106 +2,43 @@
 
 <div class="dsccheckbox" @onclick:stopPropagation>
 	<CascadingValue Value="@Config">
-		<div class="@((Config.Label?.Position == Position.Top) ? "dsccheckbox-block" : "dsccheckbox-checkbox") @((Config.Error) ? " error" : "")">
-			@switch(Config.CheckboxType)
+		<div class="@((Config.Label?.Position == Position.Top) ? "dsccheckbox-checkbox" : "dsccheckbox-checkbox-flex")">
+			@if(Config.Label?.Position == Position.Top || Config.Label?.Position == Position.Left)
+			{
+				<DSCLabel Config="@Config.Label" />
+			}
+
+			@switch(Type)
 			{
 				case CheckboxType.Switch:
-					@switch(Config.Label?.Position)
-					{
-						case Position.Top:
-							<div class="checkbox-centered-wrapper">
-								<DSCLabel Config="@Config.Label" />
+					<span class="dsccheckbox-switch-track" @onclick="onCheck">
+						<span class="dsccheckbox-switch@((_checked) ? " checked" : "") @_bg"></span>
+					</span>
 
-								<span class="dsccheckbox-switch-track" @onclick="onCheck">
-									<span class="dsccheckbox-switch@((_checked) ? " checked" : "") @_bg"></span>
-								</span>
-							</div>
-							break;
-						case Position.Left:
-							<DSCLabel Config="@Config.Label" />
-
-							<span class="dsccheckbox-switch-track" @onclick="onCheck">
-								<span class="dsccheckbox-switch@((_checked) ? " checked" : "") @_bg"></span>
-							</span>
-						break;
-						case Position.Right:
-							<span class="dsccheckbox-switch-track" @onclick="onCheck">
-								<span class="dsccheckbox-switch@((_checked) ? " checked" : "") @_bg"></span>
-							</span>
-
-							<DSCLabel Config="@Config.Label" />
-							break;
-					}
 					break;
 				case CheckboxType.Icon:
-					@switch(Config.Label?.Position)
-					{
-						case Position.Top:
-							<div class="checkbox-centered-wrapper">
-								<DSCLabel Config="@Config.Label" />
+					<span class="dsccheckbox-icon cursor-pointer" @onclick="onCheck">
+						<i class="checkbox-icon@((_checked) ? " checked" : "") @_image @Size"></i>
+					</span>
 
-								<span class="dsccheckbox-icon cursor-pointer" @onclick="onCheck">
-									<i class="checkbox-icon@((_checked) ? " checked" : "") @_image @Size"></i>
-								</span>
-							</div>
-							break;
-						case Position.Left:
-							<DSCLabel Config="@Config.Label" />
-
-							<span class="dsccheckbox-icon cursor-pointer" @onclick="onCheck">
-								<i class="checkbox-icon@((_checked) ? " checked" : "") @_image @Size"></i>
-							</span>
-							break;
-						case Position.Right:
-							<span class="dsccheckbox-icon cursor-pointer" @onclick="onCheck">
-								<i class="checkbox-icon@((_checked) ? " checked" : "") @_image @Size"></i>
-							</span>
-
-							<DSCLabel Config="@Config.Label" />
-							break;
-					}
 					break;
 				case CheckboxType.Image:
-					@switch(Config.Label?.Position)
-					{
-						case Position.Top:
-							<div class="checkbox-centered-wrapper">
-								<DSCLabel Config="@Config.Label" />
-
-								<span class="cursor-pointer" @onclick="onCheck">
-									<span class="dsccheckbox-image@((_checked) ? " checked" : "") @_image @Size"></span>
-								</span>
-							</div>
-							break;
-						case Position.Left:
-							<DSCLabel Config="@Config.Label" />
-
-							<span class="cursor-pointer" @onclick="onCheck">
-								<span class="dsccheckbox-image@((_checked) ? " checked" : "") @_image @Size"></span>
-							</span>
-							break;
-						case Position.Right:
-							<span class="cursor-pointer" @onclick="onCheck">
-								<span class="dsccheckbox-image@((_checked) ? " checked" : "") @_image @Size"></span>
-							</span>
-
-							<DSCLabel Config="@Config.Label" />
-							break;
-					}
+					<span class="cursor-pointer" @onclick="onCheck">
+						<span class="dsccheckbox-image@((_checked) ? " checked" : "") @_image @Size"></span>
+					</span>
+					
 					break;
 				default:
-					@if(Config.Label?.Position == Position.Left || Config.Label?.Position == Position.Top)
-					{
-						<DSCLabel Config="@Config.Label" />
-					}
 					<div class="checkbox @_bg" name="@Config.Name" @onclick="onCheck">
 						<div class="dsccheckbox-checkmark@((_checked) ? " checked" : "")"></div>
 					</div>
-					@if(Config.Label?.Position == Position.Right)
-					{
-						<DSCLabel Config="@Config.Label" />
-					}
+
 					break;
+			}
+
+			@if(Config.Label?.Position == Position.Right)
+			{
+				<DSCLabel Config="@Config.Label" />
 			}
 		</div>
 	</CascadingValue>
@@ -113,6 +50,11 @@
 	/// </summary>
 	[Parameter]
 	public DSCConfig Config { get; set; }
+	/// <summary>
+	/// Type of checkbox
+	/// </summary>
+	[Parameter]
+	public CheckboxType Type { get; set; }
 	/// <summary>
 	/// Background image/icon to use when checkbox is not checked.
 	/// </summary>
@@ -145,11 +87,10 @@
 			case Position.InlineTopLeft:
 			case Position.InlineTopRight:
 				throw new Exception($"The label position {Config.Label.Position} is not valid for this component type.");
-				break;
 		}
 
-		if((Config.CheckboxType == CheckboxType.Image || Config.CheckboxType == CheckboxType.Icon) && (Unchecked is null && Checked is null))
-			throw new Exception($"The checkbox type {Config.CheckboxType} requires an image/icon.");
+		if((Type == CheckboxType.Image || Type == CheckboxType.Icon) && (Unchecked is null && Checked is null))
+			throw new Exception($"The checkbox type {Type} requires an image/icon.");
 
 		base.OnInitialized();
 	}

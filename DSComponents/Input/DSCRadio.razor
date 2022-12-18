@@ -1,0 +1,118 @@
+﻿@using DSComponents.Enums
+@inject IDSCService DSCService
+
+<div class="dscradio">
+	<div class="@((Config.Label?.Position == Position.Top) ? "dscradio-radio" : "dscradio-radio-flex")" @onclick="onCheck">
+		@if(Config.Label?.Position == Position.Top || Config.Label?.Position == Position.Left)
+		{
+			<DSCLabel Config="@Config.Label" />
+		}
+
+		@switch(Type)
+		{
+			case CheckboxType.Switch:
+				break;
+			case CheckboxType.Icon:
+				break;
+			case CheckboxType.Image:
+				break;
+			default:
+				<input type="radio" name="@Config.Name" />
+				break;
+		}
+
+		@if(Config.Label?.Position == Position.Right)
+		{
+			<DSCLabel Config="@Config.Label" />
+		}
+	</div>
+</div>
+
+@code {
+	/// <summary>
+	/// Configuration class for the checkbox component
+	/// </summary>
+	[Parameter]
+	public DSCConfig Config { get; set; }
+	/// <summary>
+	/// Type of checkbox
+	/// </summary>
+	[Parameter]
+	public CheckboxType Type { get; set; }
+	/// <summary>
+	/// 
+	/// </summary>
+	[Parameter]
+    public string Value { get; set; }
+	/// <summary>
+	/// Background image/icon to use when checkbox is not checked.
+	/// </summary>
+	[Parameter]
+	public string Unchecked { get; set; }
+	/// <summary>
+	/// Background image/icon to use when checkbox is checked
+	/// </summary>
+	[Parameter]
+	public string Checked { get; set; }
+	/// <summary>
+	/// Size of the image or icon to use
+	/// </summary>
+	[Parameter]
+	public string Size { get; set; }
+	/// <summary>
+	/// Callback event
+	/// </summary>
+	[Parameter]
+	public EventCallback<(string, string)> CheckCallback { get; set; }
+
+	private string _bg, _image;
+	private bool _checked;
+	private RadioGroup _group;
+
+	protected override void OnInitialized()
+	{
+		@switch(Config.Label.Position)
+		{
+			case Position.InlineTop:
+			case Position.InlineTopLeft:
+			case Position.InlineTopRight:
+				throw new Exception($"The label position {Config.Label.Position} is not valid for this component type.");
+		}
+
+		//if((Type == CheckboxType.Image || Type == CheckboxType.Icon) && (Unchecked is null && Checked is null))
+		//	throw new Exception($"The checkbox type {Type} requires an image/icon.");
+
+		base.OnInitialized();
+	}
+
+	protected override void OnParametersSet()
+	{
+		_group = DSCService.RadioGroups.FirstOrDefault(rg => rg.GroupName == Config.Name);
+
+		_bg = (Config.Disabled)
+			? "disabled"
+			: "dsc-background";
+
+		setImage();
+
+		base.OnParametersSet();
+	}
+
+	private void onCheck()
+	{
+		if (Config.Disabled)
+			return;
+
+		_checked = !_checked;
+
+		setImage();
+
+		_group.SelectedValue = Value;
+
+		CheckCallback.InvokeAsync((_group.GroupName, _group.SelectedValue));
+	}
+
+	private void setImage() => _image = (_checked)
+		? Checked
+		: Unchecked;
+}

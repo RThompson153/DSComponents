@@ -4,7 +4,8 @@ namespace DSComponents
 {
 	public interface IDSCService
 	{
-        protected internal IEnumerable<DSCConfig> DSCInputConfigs { get; set; }
+        internal IEnumerable<DSCConfig> Dropdowns { get; set; }
+        internal IEnumerable<RadioGroup> RadioGroups {get; set; }
 
         public void CloseDropdowns();
     }

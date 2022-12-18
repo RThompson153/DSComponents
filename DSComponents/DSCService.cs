@@ -5,18 +5,25 @@ namespace DSComponents
 {
 	public class DSCService : IDSCService
 	{
-        private IEnumerable<DSCConfig> _dscInputConfigs;
-        public IEnumerable<DSCConfig> DSCInputConfigs
+        private IEnumerable<DSCConfig> _dropdowns;
+        private IEnumerable<RadioGroup> _radioGroups;
+        public IEnumerable<DSCConfig> Dropdowns
         {
-            get => _dscInputConfigs ?? new List<DSCConfig>();
-            set => _dscInputConfigs = value;
+            get => _dropdowns ?? new List<DSCConfig>();
+            set => _dropdowns = value;
         }
+
+        public IEnumerable<RadioGroup> RadioGroups
+        {
+            get => _radioGroups ?? new List<RadioGroup>();
+            set => _radioGroups = value;
+		}
 
         public void CloseDropdowns()
         {
-            if (DSCInputConfigs.Any(dsci => dsci.Expanded))
+            if (Dropdowns.Any(dsci => dsci.Expanded))
             {
-                foreach (var dsci in DSCInputConfigs)
+                foreach (var dsci in Dropdowns)
                     dsci.Expanded = false;
             }
         }

@@ -53,6 +53,8 @@
 	[Parameter]
 	public DSCConfig Config { get; set; }
 	[Parameter]
+	public NumericType Type { get; set; }
+	[Parameter]
 	public bool HideLabel { get; set; }
 	[Parameter]
 	public bool HideSpin { get; set; }
@@ -73,13 +75,6 @@
 
 	protected override void OnParametersSet()
 	{
-		var configs = DSCService.DSCInputConfigs.ToList();
-
-		if (!configs.Contains(Config))
-			configs.Add(Config);
-
-		DSCService.DSCInputConfigs = configs;
-
 		if(Config.Timeout is not null)
 		{
 			_timer = new Timer();
@@ -105,7 +100,7 @@
 
 		try
 		{
-			object value = Config.NumericType switch
+			object value = Type switch
 			{
 				NumericType.Int => int.Parse(val.Value?.ToString()),
 				NumericType.Decimal => decimal.Parse(val.Value?.ToString()),
