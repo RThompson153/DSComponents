@@ -10,3 +10,27 @@ This component library was built to focus primarily on functionality and allow f
 .disabled - Disabled rule
 .dsc-text - Text & font rule
 .dsc-background - Background rule
+
+# RoadMap
+# Stretch
+	* Code Editor
+# Planned
+	* Drag and Drop
+	* Popover
+	* Dialog
+	* Modal
+	* Datepicker
+	* Tooltip
+	* Tabs
+	* Slider
+	* Carousel
+	* Image
+	* Table
+# In Progress
+	* Radio Button
+# Completed
+	* Label
+	* Select
+	* Text
+	* Number
+	* Checkbox
