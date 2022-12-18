@@ -1,26 +1,59 @@
 ﻿@using System.Timers
 @using DSComponents.Enums
-@using DSComponents.Input.Models
 @using System.Text.RegularExpressions
 @inject IDSCService DSCService
 
 <div class="dscnumber" @onclick:stopPropagation>
 	<CascadingValue Value="@Config">
-		<div class="dscnumber-number dsc-text @_bg @((Config.Error) ? "error" : "")">
-			@if(!HideLabel)
-			{
-				<DSCLabel Config="@Config.Label" Disabled="@Config.Disabled" />
-			}
+		@switch(Config.Label?.Position)
+		{
+			case Position.Top:
+			case Position.Left:
+				@if(!HideLabel)
+				{
+					<DSCLabel Config="@Config.Label" Disabled="@Config.Disabled" />
+				}
 
-			<input type="number" class="dscnumber-content @((HideSpin) ? "hide-spin" : "")" placeholder="@Config.Placeholder" name="@Config.Name" value="@_value" min="@Config.Minimum" maxlength="@Config.Maximum" @onchange="onInput" @oninput="onInput" @onfocusin="onFocusIn" disabled="@Config.Disabled" />
-			
-		</div>
+				<div class="dscnumber-number dsc-text @_bg @((Config.Error) ? "error" : "")">
+					<input type="number" class="dscnumber-content @((HideSpin) ? "hide-spin" : "")" placeholder="@Config.Placeholder" name="@Config.Name" value="@_value" min="@Config.Minimum" maxlength="@Config.Maximum" @onchange="onInput" @oninput="onInput" @onfocusin="onFocusIn" disabled="@Config.Disabled" />
+				</div>
+				break;
+			case Position.Right:
+				<div class="dscnumber-number dsc-text @_bg @((Config.Error) ? "error" : "")">
+					<input type="number" class="dscnumber-content @((HideSpin) ? "hide-spin" : "")" placeholder="@Config.Placeholder" name="@Config.Name" value="@_value" min="@Config.Minimum" maxlength="@Config.Maximum" @onchange="onInput" @oninput="onInput" @onfocusin="onFocusIn" disabled="@Config.Disabled" />
+				</div>
+
+				@if(!HideLabel)
+				{
+					<DSCLabel Config="@Config.Label" Disabled="@Config.Disabled" />
+				}
+				break;
+			case Position.InlineTop:
+			case Position.InlineTopLeft:
+			case Position.InlineTopRight:
+				<div class="dscnumber-number dsc-text @_bg @((Config.Error) ? "error" : "")">
+					@if(!HideLabel)
+					{
+						<DSCLabel Config="@Config.Label" Disabled="@Config.Disabled" />
+					}
+
+					<input type="number" class="dscnumber-content @((HideSpin) ? "hide-spin" : "")" placeholder="@Config.Placeholder" name="@Config.Name" value="@_value" min="@Config.Minimum" maxlength="@Config.Maximum" @onchange="onInput" @oninput="onInput" @onfocusin="onFocusIn" disabled="@Config.Disabled" />
+				</div>
+				break;
+			default:
+				<div class="dscnumber-number dsc-text @_bg @((Config.Error) ? "error" : "")">
+					<input type="number" class="dscnumber-content @((HideSpin) ? "hide-spin" : "")" placeholder="@Config.Placeholder" name="@Config.Name" value="@_value" min="@Config.Minimum" maxlength="@Config.Maximum" @onchange="onInput" @oninput="onInput" @onfocusin="onFocusIn" disabled="@Config.Disabled" />
+				</div>
+				break;
+		}
 	</CascadingValue>
 </div>
 
 @code{
 	[Parameter]
 	public DSCConfig Config { get; set; }
+	[Parameter]
+	public NumericType Type { get; set; }
 	[Parameter]
 	public bool HideLabel { get; set; }
 	[Parameter]
@@ -42,13 +75,6 @@
 
 	protected override void OnParametersSet()
 	{
-		var configs = DSCService.DSCInputConfigs.ToList();
-
-		if (!configs.Contains(Config))
-			configs.Add(Config);
-
-		DSCService.DSCInputConfigs = configs;
-
 		if(Config.Timeout is not null)
 		{
 			_timer = new Timer();
@@ -74,7 +100,7 @@
 
 		try
 		{
-			object value = Config.NumericType switch
+			object value = Type switch
 			{
 				NumericType.Int => int.Parse(val.Value?.ToString()),
 				NumericType.Decimal => decimal.Parse(val.Value?.ToString()),

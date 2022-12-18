@@ -1,20 +1,51 @@
 ﻿@using System.Timers
 @using DSComponents.Enums
-@using DSComponents.Input.Models
 @using System.Text.RegularExpressions
 @inject IDSCService DSCService
 
 <div class="dsctext" @onclick:stopPropagation>
 	<CascadingValue Value="@Config">
-		<div class="dsctext-text dsc-text @_bg @((Config.Error) ? "error" : "")">
-			@if(!HideLabel)
-			{
-				<DSCLabel Config="@Config.Label" Disabled="@Config.Disabled" />
-			}
+		@switch(Config.Label?.Position)
+		{
+			case Position.Top:
+			case Position.Left:
+				@if(!HideLabel)
+				{
+					<DSCLabel Config="@Config.Label" Disabled="@Config.Disabled" />
+				}
 
-			<input type="text" class="dsctext-content" placeholder="@Config.Placeholder" name="@Config.Name" value="@_value" min="@Config.Minimum" maxlength="@Config.Maximum" @oninput="onInput" @onkeyup="onKeyup" disabled="@Config.Disabled" />
-			
-		</div>
+				<div class="dsctext-text dsc-text @_bg @((Config.Error) ? "error" : "")">
+					<input type="text" class="dsctext-content" placeholder="@Config.Placeholder" name="@Config.Name" value="@_value" min="@Config.Minimum" maxlength="@Config.Maximum" @oninput="onInput" @onkeyup="onKeyup" disabled="@Config.Disabled" />
+				</div>
+				break;
+			case Position.Right:
+				<div class="dsctext-text dsc-text @_bg @((Config.Error) ? "error" : "")">
+					<input type="text" class="dsctext-content" placeholder="@Config.Placeholder" name="@Config.Name" value="@_value" min="@Config.Minimum" maxlength="@Config.Maximum" @oninput="onInput" @onkeyup="onKeyup" disabled="@Config.Disabled" />
+				</div>
+
+				@if(!HideLabel)
+				{
+					<DSCLabel Config="@Config.Label" Disabled="@Config.Disabled" />
+				}
+				break;
+			case Position.InlineTop:
+			case Position.InlineTopLeft:
+			case Position.InlineTopRight:
+				<div class="dsctext-text dsc-text @_bg @((Config.Error) ? "error" : "")">
+					@if(!HideLabel)
+					{
+						<DSCLabel Config="@Config.Label" Disabled="@Config.Disabled" />
+					}
+
+					<input type="text" class="dsctext-content" placeholder="@Config.Placeholder" name="@Config.Name" value="@_value" min="@Config.Minimum" maxlength="@Config.Maximum" @oninput="onInput" @onkeyup="onKeyup" disabled="@Config.Disabled" />
+				</div>
+				break;
+			default:
+				<div class="dsctext-text dsc-text @_bg @((Config.Error) ? "error" : "")">
+					<input type="text" class="dsctext-content" placeholder="@Config.Placeholder" name="@Config.Name" value="@_value" min="@Config.Minimum" maxlength="@Config.Maximum" @oninput="onInput" @onkeyup="onKeyup" disabled="@Config.Disabled" />
+				</div>
+				break;
+		}
 		@*@if(!string.IsNullOrEmpty(_error))
 		{
 			<span class="error">! @_error</span>

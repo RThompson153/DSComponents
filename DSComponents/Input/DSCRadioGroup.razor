@@ -1,0 +1,29 @@
+﻿@using DSComponents
+@inject IDSCService DSCService
+
+<div class="dscradiogroup" @onclick:stopPropagation>
+	@ChildContent
+</div>
+
+@code {
+	[Parameter]
+	public string GroupName { get; set; }
+	[Parameter]
+	public RenderFragment ChildContent { get; set; }
+
+	private RadioGroup _group = new RadioGroup();
+
+	protected override void OnParametersSet()
+	{
+		_group.GroupName = GroupName;
+
+		var groups = DSCService.RadioGroups.ToList();
+
+		if (!groups.Contains(_group))
+			groups.Add(_group);
+
+		DSCService.RadioGroups = groups;
+
+		base.OnParametersSet();
+	}
+}

@@ -17,6 +17,6 @@
 
 	public enum CheckboxType
 	{
-		Default, Switch
+		Default, Switch, Image, Icon
 	}
 }

@@ -1,52 +1,105 @@
 ﻿@using System.Linq
 @using DSComponents
 @using DSComponents.Enums
-@using DSComponents.Input.Models
 @inject IDSCService DSCService
 
-<div class="dscselect" @onclick:stopPropagation>
-	<CascadingValue Value="@Config">
-		<div class="dscselect-select dsc-text @_bg @((Config.Error) ? "error" : "")" @onclick="toggleSelectMenu">
-			@if(!HideLabel)
-			{
-				<DSCLabel Config="@Config.Label" Disabled="@Config.Disabled" />
-			}
 
-			<div class="dscselect-content-wrapper">
-				<div class="dscselect-content">
-					<span class="dsc-content-items">@(string.Join(",", Config.SelectValues))</span>
+<CascadingValue Value="@Config">
+	<div class="dscselect" @onclick:stopPropagation>
+		@switch(Config.Label?.Position)
+		{
+			case Position.Top:
+			case Position.Left:
+				@if(!HideLabel)
+				{
+					<DSCLabel Config="@Config.Label" Disabled="@Config.Disabled" />
+				}
+
+				<div class="dscselect-select dsc-text @_bg @((Config.Error) ? "error" : "")" @onclick="toggleSelectMenu">
+					<div class="dscselect-content-wrapper">
+						<div class="dscselect-content">
+							<span class="dsc-content-items">@(string.Join(",", Config.SelectValues))</span>
 				
+						</div>
+
+						<i class="chevron chevron-@((_expanded) ? "up" : "down")"></i>
+					</div>
+				</div>
+				break;
+			case Position.Right:
+				<div class="dscselect-select dsc-text @_bg @((Config.Error) ? "error" : "")" @onclick="toggleSelectMenu">
+					<div class="dscselect-content-wrapper">
+						<div class="dscselect-content">
+							<span class="dsc-content-items">@(string.Join(",", Config.SelectValues))</span>
+				
+						</div>
+
+						<i class="chevron chevron-@((_expanded) ? "up" : "down")"></i>
+					</div>
 				</div>
 
-				<i class="chevron chevron-@((_expanded) ? "up" : "down")"></i>
-			</div>
-			
-		</div>
-
-		@if(_expanded)
-		{
-			<div class="dscselect-select-menu" @onclick="selectItem">
-				<ul class="dsc-text @_bg">
-					@if(Config.Searchable)
+				@if(!HideLabel)
+				{
+					<DSCLabel Config="@Config.Label" Disabled="@Config.Disabled" />
+				}
+				break;
+			case Position.InlineTop:
+			case Position.InlineTopLeft:
+			case Position.InlineTopRight:
+				<div class="dscselect-select dsc-text @_bg @((Config.Error) ? "error" : "")" @onclick="toggleSelectMenu">
+					@if(!HideLabel)
 					{
-						<div class="dscselect-search" @onclick:stopPropagation>
-							<DSCText Config="@Config" HideLabel="true" OnInput="filterItems" />
+						<DSCLabel Config="@Config.Label" Disabled="@Config.Disabled" />
+					}
+
+					<div class="dscselect-content-wrapper">
+						<div class="dscselect-content">
+							<span class="dsc-content-items">@(string.Join(",", Config.SelectValues))</span>
+				
 						</div>
-					}
 
-					@if(Config.SelectItems.Any())
-					{
-						@ChildContent
-					}
-					else
-					{
-						<h6 class="empty-list">No Items</h6>
-					}
-				</ul>
-			</div>
+						<i class="chevron chevron-@((_expanded) ? "up" : "down")"></i>
+					</div>
+				</div>
+				break;
+			default:
+				<div class="dscselect-select dsc-text @_bg @((Config.Error) ? "error" : "")" @onclick="toggleSelectMenu">
+					<div class="dscselect-content-wrapper">
+						<div class="dscselect-content">
+							<span class="dsc-content-items">@(string.Join(",", Config.SelectValues))</span>
+				
+						</div>
+
+						<i class="chevron chevron-@((_expanded) ? "up" : "down")"></i>
+					</div>
+				</div>
+				break;
 		}
-	</CascadingValue>
-</div>
+	</div>
+
+	@if(_expanded)
+	{
+		<div class="dscselect-select-menu" @onclick="selectItem">
+			<ul class="dsc-text @_bg @((Config.Label?.Position == Position.Left) ? "right" : "")">
+				@if(Config.Searchable)
+				{
+					<div class="dscselect-search" @onclick:stopPropagation>
+						<DSCText Config="@Config" HideLabel="true" OnInput="filterItems" />
+					</div>
+				}
+
+				@if(Config.SelectItems.Any())
+				{
+					@ChildContent
+				}
+				else
+				{
+					<h6 class="empty-list">No Items</h6>
+				}
+			</ul>
+		</div>
+	}
+</CascadingValue>
 
 @code {
 	[Parameter]
@@ -84,12 +137,12 @@
 
 	protected override void OnParametersSet()
 	{
-		var configs = DSCService.DSCInputConfigs.ToList();
+		var configs = DSCService.Dropdowns.ToList();
 
 		if (!configs.Contains(Config))
 			configs.Add(Config);
 
-		DSCService.DSCInputConfigs = configs;
+		DSCService.Dropdowns = configs;
 
 		_bg = (Config.Disabled)
 			? "disabled"
@@ -118,7 +171,7 @@
 
 		Config.SelectItems = _filteredList;
 
-		foreach (var config in DSCService.DSCInputConfigs.ToList())
+		foreach (var config in DSCService.Dropdowns.ToList())
 			config.Expanded = false;
 
 		Expanded = !Expanded;			

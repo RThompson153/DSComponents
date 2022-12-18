@@ -1,26 +1,25 @@
 ﻿@using DSComponents.Enums
-@using DSComponents.Input.Models
 
 @if(Config != null)
 {
 	@switch(Config.Position)
 	{
 		case Position.InlineTop:
-			<div class="center top">
+			<div class="inline-center top">
 				<div class="label-inline dsc-text @_bg">
 					<span class="label">@Config.Label</span>
 				</div>
 			</div>
 			break;
 		case Position.InlineTopLeft:
-			<div class="top left">
+			<div class="top inline-left">
 				<div class="label-inline dsc-text @_bg">
 					<span class="label">@Config.Label</span>
 				</div>
 			</div>
 			break;
 		case Position.InlineTopRight:
-			<div class="top right">
+			<div class="top inline-right">
 				<div class="label-inline dsc-text @_bg">
 					<span class="label">@Config.Label</span>
 				</div>
@@ -28,21 +27,21 @@
 			break;
 		case Position.Top:
 			<div class="top">
-				<div class="dsc-text @_bg">
+				<div class="dsc-text">
 					<span class="label">@Config.Label</span>
 				</div>
 			</div>
 			break;
 		case Position.Left:
 			<div class="left">
-				<div class="dsc-text @_bg">
+				<div class="dsc-text">
 					<span class="label">@Config.Label</span>
 				</div>
 			</div>
 			break;
 		case Position.Right:
 			<div class="right">
-				<div class="dsc-text @_bg">
+				<div class="dsc-text">
 					<span class="label">@Config.Label</span>
 				</div>
 			</div>

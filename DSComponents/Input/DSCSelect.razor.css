@@ -1,10 +1,14 @@
-﻿.dscselect-select {
+﻿.dscselect{
+    display: flex;
+}
+
+.dscselect-select {
     border-style: solid;
     border-radius: 0.25rem;
     border-width: 1px;
     border-color: rgb(0, 0, 0);
-    width: 100%;
     min-height: 30px;
+    width: 100%;
 }
 
 .dscselect-select .dscselect-content-wrapper {
@@ -23,7 +27,6 @@
 
 .dscselect-select-menu {
     position: relative;
-    width: 100%;
     max-height: 300px;
     border-radius: 0.25rem;
     z-index: 1000;
@@ -31,7 +34,7 @@
 
 .dscselect-select-menu ul {
     position: absolute;
-    width: inherit;
+    width: 75%;
     list-style: none;
     padding: 0;
     box-shadow: 0px 5px 5px 3px rgba(0, 0, 0, 0.5);
@@ -57,4 +60,16 @@
 
 .chevron-down {
     background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" class="bi bi-chevron-down" viewBox="0 0 16 16"> <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/> </svg>');
+}
+
+.right{
+    right: 0;
+}
+
+.dsc-text {
+    color: initial;
+}
+
+.dsc-background {
+    background-color: initial;
 }

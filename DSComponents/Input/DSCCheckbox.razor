@@ -1,19 +1,44 @@
 ﻿@using DSComponents.Enums
-@using DSComponents.Input.Models
 
 <div class="dsccheckbox" @onclick:stopPropagation>
 	<CascadingValue Value="@Config">
-		<div class="dsccheckbox-checkbox @((Config.Error) ? "error" : "")">
-			@switch(Config.CheckboxType)
+		<div class="@((Config.Label?.Position == Position.Top) ? "dsccheckbox-checkbox" : "dsccheckbox-checkbox-flex")">
+			@if(Config.Label?.Position == Position.Top || Config.Label?.Position == Position.Left)
+			{
+				<DSCLabel Config="@Config.Label" />
+			}
+
+			@switch(Type)
 			{
 				case CheckboxType.Switch:
+					<span class="dsccheckbox-switch-track" @onclick="onCheck">
+						<span class="dsccheckbox-switch@((_checked) ? " checked" : "") @_bg"></span>
+					</span>
+
+					break;
+				case CheckboxType.Icon:
+					<span class="dsccheckbox-icon cursor-pointer" @onclick="onCheck">
+						<i class="checkbox-icon@((_checked) ? " checked" : "") @_image @Size"></i>
+					</span>
+
+					break;
+				case CheckboxType.Image:
+					<span class="cursor-pointer" @onclick="onCheck">
+						<span class="dsccheckbox-image@((_checked) ? " checked" : "") @_image @Size"></span>
+					</span>
+					
 					break;
 				default:
-					<DSCLabel Config="@Config.Label" />
 					<div class="checkbox @_bg" name="@Config.Name" @onclick="onCheck">
-						<div class="dsccheckbox-checkmark @((_checked) ? "checked" : "")"></div>
+						<div class="dsccheckbox-checkmark@((_checked) ? " checked" : "")"></div>
 					</div>
+
 					break;
+			}
+
+			@if(Config.Label?.Position == Position.Right)
+			{
+				<DSCLabel Config="@Config.Label" />
 			}
 		</div>
 	</CascadingValue>
@@ -26,12 +51,32 @@
 	[Parameter]
 	public DSCConfig Config { get; set; }
 	/// <summary>
-	/// Callback event for UI interaction
+	/// Type of checkbox
+	/// </summary>
+	[Parameter]
+	public CheckboxType Type { get; set; }
+	/// <summary>
+	/// Background image/icon to use when checkbox is not checked.
+	/// </summary>
+	[Parameter]
+	public string Unchecked { get; set; }
+	/// <summary>
+	/// Background image/icon to use when checkbox is checked
+	/// </summary>
+	[Parameter]
+	public string Checked { get; set; }
+	/// <summary>
+	/// Size of the image or icon to use
+	/// </summary>
+	[Parameter]
+	public string Size { get; set; }
+	/// <summary>
+	/// Callback event
 	/// </summary>
 	[Parameter]
 	public EventCallback<bool> CheckedCallback { get; set; }
 
-	private string _bg;
+	private string _bg, _image;
 	private bool _checked;
 
 	protected override void OnInitialized()
@@ -42,8 +87,11 @@
 			case Position.InlineTopLeft:
 			case Position.InlineTopRight:
 				throw new Exception($"The label position {Config.Label.Position} is not valid for this component type.");
-				break;
 		}
+
+		if((Type == CheckboxType.Image || Type == CheckboxType.Icon) && (Unchecked is null && Checked is null))
+			throw new Exception($"The checkbox type {Type} requires an image/icon.");
+
 		base.OnInitialized();
 	}
 
@@ -52,6 +100,8 @@
 		_bg = (Config.Disabled)
 			? "disabled"
 			: "dsc-background";
+
+		setImage();
 
 		base.OnParametersSet();
 	}
@@ -63,6 +113,12 @@
 
 		_checked = !_checked;
 
+		setImage();
+
 		CheckedCallback.InvokeAsync(_checked);
 	}
+
+	private void setImage() => _image = (_checked)
+		? Checked
+		: Unchecked;
 }
