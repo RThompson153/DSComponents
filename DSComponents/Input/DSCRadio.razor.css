@@ -5,3 +5,16 @@
 .dscradio-radio-flex {
 	display: flex;
 }
+
+.dscradio-radio{
+	margin: auto;
+	width: 1rem;
+	height: 1rem;
+	background-color: red;
+	border: 1px solid black;
+	border-radius: 25%;
+}
+
+.dscradio-radio.checked{
+	background-color: green;
+}

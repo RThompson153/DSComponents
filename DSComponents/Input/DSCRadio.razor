@@ -2,7 +2,7 @@
 @inject IDSCService DSCService
 
 <div class="dscradio">
-	<div class="@((Config.Label?.Position == Position.Top) ? "dscradio-radio" : "dscradio-radio-flex")" @onclick="onCheck">
+	<div class="@((Config.Label?.Position == Position.Top) ? "dscradio-radio" : "dscradio-radio-flex")">
 		@if(Config.Label?.Position == Position.Top || Config.Label?.Position == Position.Left)
 		{
 			<DSCLabel Config="@Config.Label" />
@@ -17,7 +17,8 @@
 			case CheckboxType.Image:
 				break;
 			default:
-				<input type="radio" name="@Config.Name" />
+				<span class="dscradio-radio @((_group.Options[Value]) ? "checked" : "")" name="@Config.Name" @onclick="onCheck"></span>
+				@*<input class="dscradio-radio" type="radio" name="@Config.Name" />*@
 				break;
 		}
 
@@ -63,7 +64,7 @@
 	/// Callback event
 	/// </summary>
 	[Parameter]
-	public EventCallback<(string, string)> CheckCallback { get; set; }
+	public EventCallback<string> CheckCallback { get; set; }
 
 	private string _bg, _image;
 	private bool _checked;
@@ -89,6 +90,13 @@
 	{
 		_group = DSCService.RadioGroups.FirstOrDefault(rg => rg.GroupName == Config.Name);
 
+		var options = _group?.Options;
+
+		if (options?.ContainsKey(Value) == false)
+			options.Add(Value, false);
+
+		_group.Options = options;
+
 		_bg = (Config.Disabled)
 			? "disabled"
 			: "dsc-background";
@@ -103,16 +111,23 @@
 		if (Config.Disabled)
 			return;
 
-		_checked = !_checked;
-
 		setImage();
 
 		_group.SelectedValue = Value;
 
-		CheckCallback.InvokeAsync((_group.GroupName, _group.SelectedValue));
+		var options = _group.Options;
+
+		foreach(KeyValuePair<string, bool> option in options.Where(o => o.Key != Value))
+			options[option.Key] = false;
+
+		options[Value] = !options[Value];
+
+		_group.Options = options;
+
+		CheckCallback.InvokeAsync(_group.SelectedValue);
 	}
 
-	private void setImage() => _image = (_checked)
+	private void setImage() => _image = (_group.Options[Value])
 		? Checked
 		: Unchecked;
 }

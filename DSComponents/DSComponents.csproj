@@ -11,6 +11,7 @@
     <PackageProjectUrl>http://devshed.dev</PackageProjectUrl>
     <RepositoryUrl>https://github.com/RThompson153/DSComponents</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReleaseNotes>Adds basic radio button functionality.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
