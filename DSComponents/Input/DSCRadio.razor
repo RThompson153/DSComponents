@@ -17,8 +17,12 @@
 			case CheckboxType.Image:
 				break;
 			default:
-				<span class="dscradio-radio @((_group.Options[Value]) ? "checked" : "")" name="@Config.Name" @onclick="onCheck"></span>
-				@*<input class="dscradio-radio" type="radio" name="@Config.Name" />*@
+				<span class="dscradio-radio @((_group.Options[Value]) ? "checked" : "")" name="@Config.Name" @onclick="onCheck">
+					@if(_group.Options[Value])
+					{
+						<span class="radio-select"></span>
+					}
+				</span>
 				break;
 		}
 
@@ -124,7 +128,8 @@
 
 		_group.Options = options;
 
-		CheckCallback.InvokeAsync(_group.SelectedValue);
+		if(_group.Options[Value])
+			CheckCallback.InvokeAsync(_group.SelectedValue);
 	}
 
 	private void setImage() => _image = (_group.Options[Value])
