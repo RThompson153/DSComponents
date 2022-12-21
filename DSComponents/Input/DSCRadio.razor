@@ -11,16 +11,25 @@
 		@switch(Type)
 		{
 			case CheckboxType.Switch:
+				<span class="dscradio-switch-track @Size" @onclick="onCheck">
+					<span class="dscradio-switch@((_group.Options[Value]) ? " checked" : "") @_bg"></span>
+				</span>
 				break;
 			case CheckboxType.Icon:
+				<span class="dscradio-icon cursor-pointer" name="@Config.Name" @onclick="onCheck">
+					<i class="@((_group.Options[Value]) ? "checked" : "") @_image @Size"></i>
+				</span>
 				break;
 			case CheckboxType.Image:
+				<span class="cursor-pointer" name="@Config.Name" @onclick="onCheck">
+					<span class="dscradio-image @((_group.Options[Value]) ? "checked" : "") @_image @Size"></span>
+				</span>
 				break;
 			default:
-				<span class="dscradio-radio @((_group.Options[Value]) ? "checked" : "")" name="@Config.Name" @onclick="onCheck">
+				<span class="dscradio-radio @((_group.Options[Value]) ? "checked" : "") @Size" name="@Config.Name" @onclick="onCheck">
 					@if(_group.Options[Value])
 					{
-						<span class="radio-select"></span>
+						<span class="dscradio-radio-select"></span>
 					}
 				</span>
 				break;
@@ -48,7 +57,7 @@
 	/// 
 	/// </summary>
 	[Parameter]
-    public string Value { get; set; }
+	public string Value { get; set; }
 	/// <summary>
 	/// Background image/icon to use when checkbox is not checked.
 	/// </summary>
@@ -71,7 +80,6 @@
 	public EventCallback<string> CheckCallback { get; set; }
 
 	private string _bg, _image;
-	private bool _checked;
 	private RadioGroup _group;
 
 	protected override void OnInitialized()
@@ -84,8 +92,8 @@
 				throw new Exception($"The label position {Config.Label.Position} is not valid for this component type.");
 		}
 
-		//if((Type == CheckboxType.Image || Type == CheckboxType.Icon) && (Unchecked is null && Checked is null))
-		//	throw new Exception($"The checkbox type {Type} requires an image/icon.");
+		if((Type == CheckboxType.Image || Type == CheckboxType.Icon) && (Unchecked is null && Checked is null))
+			throw new Exception($"The checkbox type {Type} requires an image/icon.");
 
 		base.OnInitialized();
 	}
@@ -115,8 +123,6 @@
 		if (Config.Disabled)
 			return;
 
-		setImage();
-
 		_group.SelectedValue = Value;
 
 		var options = _group.Options;
@@ -127,6 +133,8 @@
 		options[Value] = !options[Value];
 
 		_group.Options = options;
+
+		setImage();
 
 		if(_group.Options[Value])
 			CheckCallback.InvokeAsync(_group.SelectedValue);

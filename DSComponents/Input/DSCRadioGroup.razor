@@ -1,7 +1,7 @@
 ﻿@using DSComponents
 @inject IDSCService DSCService
 
-<div class="dscradiogroup" @onclick:stopPropagation>
+<div class="dscradiogroup" @onclick="onCheck" @onclick:stopPropagation>
 	@ChildContent
 </div>
 
@@ -26,4 +26,6 @@
 
 		base.OnParametersSet();
 	}
+
+	private void onCheck() => StateHasChanged();
 }

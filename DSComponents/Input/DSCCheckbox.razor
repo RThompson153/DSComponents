@@ -11,7 +11,7 @@
 			@switch(Type)
 			{
 				case CheckboxType.Switch:
-					<span class="dsccheckbox-switch-track" @onclick="onCheck">
+					<span class="dsccheckbox-switch-track @Size" @onclick="onCheck">
 						<span class="dsccheckbox-switch@((_checked) ? " checked" : "") @_bg"></span>
 					</span>
 
@@ -29,7 +29,7 @@
 					
 					break;
 				default:
-					<div class="checkbox @_bg" name="@Config.Name" @onclick="onCheck">
+					<div class="checkbox @_bg @Size" name="@Config.Name" @onclick="onCheck">
 						<div class="dsccheckbox-checkmark@((_checked) ? " checked" : "")"></div>
 					</div>
 

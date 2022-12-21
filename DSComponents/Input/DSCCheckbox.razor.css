@@ -8,8 +8,6 @@
 
 .checkbox {
 	margin: auto;
-	width: 1.25rem;
-	height: 1.25rem;
 	border-radius: 25%;
 	border: 1px solid rgb(100, 100, 100);
 }
@@ -30,20 +28,33 @@
 .dsccheckbox-switch-track {
 	display: flex;
 	margin: auto;
-	width: 3.5rem;
-	height: 1.3rem;
 	border-radius: 1rem;
 	background-color: rgb(200, 200, 200);
 }
 
-.dsccheckbox-switch-track .dsccheckbox-switch {
+.dsccheckbox-switch-track.small{
+	width: 3.25rem;
+	height: 1.25rem;
+}
+
+.dsccheckbox-switch-track.medium{
+	width: 4rem;
+	height: 1.75rem;
+}
+
+.dsccheckbox-switch-track.large{
+	width: 5rem;
+	height: 2rem;
+}
+
+.dsccheckbox-switch {
 	width: 45%;
 	height: 100%;
 	border-radius: 50%;
 	border: 1px solid rgb(100, 100, 100);
 }
 
-.dsccheckbox-switch-track .dsccheckbox-switch.checked {
+.dsccheckbox-switch.checked {
 	margin-left: auto
 }
 
@@ -58,11 +69,6 @@
 .checkbox-icon {
 	display: flex;
 	margin: auto;
-}
-
-
-.checkbox-centered-wrapper {
-	width: fit-content;
 }
 
 .small {

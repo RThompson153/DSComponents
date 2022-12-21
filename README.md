@@ -19,7 +19,6 @@ This component library was built to focus primarily on functionality and allow f
 	* Popover
 	* Dialog
 	* Modal
-	* Datepicker
 	* Tooltip
 	* Tabs
 	* Slider
@@ -27,10 +26,12 @@ This component library was built to focus primarily on functionality and allow f
 	* Image
 	* Table
 # In Progress
-	* Radio Button
+	* Popover
+	* Datepicker
 # Completed
 	* Label
 	* Select
 	* Text
 	* Number
 	* Checkbox
+	* Radio Button
