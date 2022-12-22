@@ -29,6 +29,10 @@
     margin-left: 1rem;
 }
 
+.inline-left {
+    justify-content: left;
+}
+
 .inline-right {
     justify-content: right;
 }

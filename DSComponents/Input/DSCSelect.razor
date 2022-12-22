@@ -80,7 +80,7 @@
 	@if(_expanded)
 	{
 		<div class="dscselect-select-menu" @onclick="selectItem">
-			<ul class="dsc-text @_bg @((Config.Label?.Position == Position.Left) ? "right" : "")">
+			<ul class="dsc-text @_bg @((HideLabel) ? "menu-full-width" : "")">
 				@if(Config.Searchable)
 				{
 					<div class="dscselect-search" @onclick:stopPropagation>
