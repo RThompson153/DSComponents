@@ -151,6 +151,9 @@
 		Config.Minimum = Config.Minimum ?? 0;
 		Config.Maximum = Config.Maximum ?? Config.SelectItems.Count();
 
+		if (Config.Multiple && Config.SelectValues.Count() != Config.Maximum && Config.SelectValues.Any())
+			Expanded = true;
+
 		base.OnParametersSet();
 	}
 
