@@ -16,7 +16,6 @@ This component library was built to focus primarily on functionality and allow f
 	* Code Editor
 # Planned
 	* Drag and Drop
-	* Popover
 	* Dialog
 	* Modal
 	* Tooltip

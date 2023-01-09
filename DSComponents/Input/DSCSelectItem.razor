@@ -9,7 +9,7 @@
     public object Value { get; set; }
 
     [Parameter]
-    public EventCallback? SelectCallback { get; set; }
+    public EventCallback<string> SelectCallback { get; set; }
 
     private bool _selected;
 
@@ -39,7 +39,6 @@
             _selected = false;
         }
 
-        if (SelectCallback is not null)
-            SelectCallback?.InvokeAsync();
+        SelectCallback.InvokeAsync(Value.ToString());
     }
 }

@@ -1,15 +1,22 @@
 ﻿@using DSComponents.Enums
 
-<div class="dscpopover">
-    @if(Open)
-    {
-        <div class="dialog @_position">
-            <div class="head">@Title</div>
-
-            <div class="body">@Content</div>
-        </div>
-    }
-</div>
+@if(Open)
+{
+    <div class="dscpopover @_position">
+        @if(Title != null)
+        {
+            <div class="title">@Title</div>
+        }
+        @if(Content != null)
+        {
+            <div class="content">@Content</div>
+        }
+        @if(Footer != null)
+        {
+            <div class="footer">@Footer</div>
+        }
+    </div>
+}
 
 @code {
     [Parameter]
@@ -30,6 +37,8 @@
     [Parameter]
     public RenderFragment Content { get; set; }
     [Parameter]
+    public RenderFragment Footer { get; set; }
+    [Parameter]
     public Position Position { get; set; }
     [Parameter]
     public EventCallback<bool> OpenChanged { get; set; }
@@ -46,6 +55,7 @@
             Position.Right => "right",
             _ => ""
         };
+
         base.OnParametersSet();
     }
 }
